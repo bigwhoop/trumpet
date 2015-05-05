@@ -6,11 +6,6 @@ body {
     font-size: 20px;
     color: #111;
     background: rgb(137,137,186);
-    background: -moz-linear-gradient(top, rgba(137,137,186,1) 0%, rgba(137,137,186,1) 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(137,137,186,1)), color-stop(100%,rgba(137,137,186,1)));
-    background: -webkit-linear-gradient(top, rgba(137,137,186,1) 0%,rgba(137,137,186,1) 100%);
-    background: -o-linear-gradient(top, rgba(137,137,186,1) 0%,rgba(137,137,186,1) 100%);
-    background: -ms-linear-gradient(top, rgba(137,137,186,1) 0%,rgba(137,137,186,1) 100%);
     background: linear-gradient(to bottom, rgba(137,137,186,1) 0%,rgba(137,137,186,1) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8989ba', endColorstr='#8989ba',GradientType=0 );
 }
@@ -38,3 +33,23 @@ h1 { font-weight: 700; font-size: 24px; text-transform: uppercase; margin: 0 0 2
 p { line-height: 120%; margin: 10px 0; }
 a { color: #333; }
 pre { font-size: 14px; white-space: pre-wrap; }
+
+#presentations_index .presentations .presentation {
+    float: left;
+    width: 21%;
+    height: 140px;
+    background-color: #ddd;
+    background: linear-gradient(to bottom, #ddd 0%, transparent 50%);
+    border-radius: 5px;
+    margin: 0 2% 20px;
+    overflow: hidden;
+}
+#presentations_index .presentations .presentation a {
+    display: block;
+    text-decoration: none;
+    text-align: center;
+    padding: 10px;
+}
+#presentations_index .presentations .presentation i { margin-bottom: 10px; }
+
+.clearfix { clear: both; }

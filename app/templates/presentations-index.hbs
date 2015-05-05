@@ -1,7 +1,15 @@
-<h1>Select your presentation</h1>
-
-<ul>
-    {{#each trumpetFiles}}
-        <li><a href="{{@key}}">{{.}}</a></li>
-    {{/each}}
-</ul>
+<div id="presentations_index">
+    <h1>Select your presentation</h1>
+    
+    <div class="presentations">
+        {{#each presentations}}
+            <div class="presentation">
+                <a href="{{url}}">
+                    <i class="fa fa-file-o fa-3x"></i><br>
+                    {{title}}
+                </a>
+            </div>
+        {{/each}}
+    </div>
+    <div class="clearfix"></div>
+</div>

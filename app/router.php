@@ -69,9 +69,17 @@ $trumpetFiles = array_combine(
 
 // Index
 if (empty($requestUriParts)) {
+    $presentations = [];
+    foreach ($trumpetFiles as $url => $trumpetFile) {
+        $presentations[] = [
+            'title' => pathinfo($trumpetFile, PATHINFO_FILENAME),
+            'url'   => $url,
+            'size'  => filesize($trumpetFile),
+        ];
+    }
     renderInternalViewAndSendResponse(200, 'presentations-index', [
         'title' => 'Presentations',
-        'trumpetFiles' => $trumpetFiles,
+        'presentations' => $presentations,
     ]);
 }
 
