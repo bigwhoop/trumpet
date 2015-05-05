@@ -3,6 +3,7 @@
 namespace Trumpet;
 
 use Bigwhoop\Trumpet\Config\Config;
+use Bigwhoop\Trumpet\Exceptions\Exception;
 use Bigwhoop\Trumpet\Presentation\Presenter;
 use Bigwhoop\Trumpet\Presentation\Theme;
 use Bigwhoop\Trumpet\Presentation\ThemeException;
@@ -68,6 +69,33 @@ if (empty($requestUriParts)) {
     renderInternalViewAndSendResponse(200, 'presentations-index', [
         'title' => 'Presentations',
         'trumpetFiles' => $trumpetFiles,
+    ]);
+}
+
+if ($requestUriParts[0] === 'internal') {
+    array_shift($requestUriParts);
+    $internalPath = __DIR__ . '/www/' . implode('/', $requestUriParts);
+    if (file_exists($internalPath)) {
+        $ext = pathinfo($internalPath, PATHINFO_EXTENSION);
+        switch ($ext) {
+            case 'css': $contentType = 'text/css'; break;
+            case 'svg': $contentType = 'image/svg+xml'; break;
+            default:
+                renderInternalViewAndSendResponse(500, '500', [
+                    'title' => 'File Not Found',
+                    'message' => "Content type for extension of file '$internalPath' was not defined.",
+                ]);
+        }
+
+        http_response_code(200);
+        header('content-type: ' . $contentType);
+        readfile($internalPath);
+        exit();
+    }
+
+    renderInternalViewAndSendResponse(404, '404', [
+        'title' => 'File Not Found',
+        'message' => 'Trumpet web asset not found.',
     ]);
 }
 
