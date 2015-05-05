@@ -3,7 +3,6 @@
 namespace Trumpet;
 
 use Bigwhoop\Trumpet\Config\Config;
-use Bigwhoop\Trumpet\Exceptions\Exception;
 use Bigwhoop\Trumpet\Presentation\Presenter;
 use Bigwhoop\Trumpet\Presentation\Theme;
 use Bigwhoop\Trumpet\Presentation\ThemeException;
@@ -13,6 +12,10 @@ use Handlebars\Handlebars;
 if (php_sapi_name() !== 'cli-server') {
     exit("This file should only be run with PHP's built-in web server.");
 }
+
+error_reporting(E_ALL);
+ini_set('display_errors', true);
+ini_set('display_startup_errors', true);
 
 require __DIR__.'/../vendor/autoload.php';
 
@@ -42,7 +45,7 @@ function renderInternalViewAndSendResponse($httpStatusCode, $view, array $data =
 }
 
 $cwd = getcwd();
-$requestUriParts = array_filter(explode('/', trim($_SERVER['REQUEST_URI'], '/')), function ($e) {
+$requestUriParts = array_filter(explode('/', trim(urldecode($_SERVER['REQUEST_URI']), '/')), function ($e) {
     return !empty($e);
 });
 

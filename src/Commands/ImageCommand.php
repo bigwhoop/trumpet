@@ -10,27 +10,34 @@
 
 namespace Bigwhoop\Trumpet\Commands;
 
+use Bigwhoop\Trumpet\Presentation\Theme;
 use Intervention\Image\Constraint;
 use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
 
 class ImageCommand implements Command
 {
+    const RETURN_TYPE_FILE     = 'file';
     const RETURN_TYPE_DATA_URL = 'data-url';
     const RETURN_TYPE_PNG      = 'png';
 
     /** @var ImageManager */
     private $imageManager;
 
+    /** @var CommandExecutionContext */
+    private $executionContext;
+
     /** @var string */
-    private $returnType = self::RETURN_TYPE_DATA_URL;
+    private $returnType = self::RETURN_TYPE_FILE;
 
     /**
      * @param ImageManager $manager
+     * @param CommandExecutionContext $context
      */
-    public function __construct(ImageManager $manager)
+    public function __construct(ImageManager $manager, CommandExecutionContext $context)
     {
-        $this->imageManager = $manager;
+        $this->imageManager     = $manager;
+        $this->executionContext = $context;
     }
 
     /**
@@ -46,7 +53,7 @@ class ImageCommand implements Command
      */
     public function getToken()
     {
-        return 'include';
+        return 'image';
     }
 
     /**
@@ -121,8 +128,18 @@ class ImageCommand implements Command
     private function returnImage(Image $img)
     {
         switch ($this->returnType) {
+            case self::RETURN_TYPE_FILE:
+                $tmpDir = $this->executionContext->getWorkingDirectory() . '/_tmp';
+                if (!is_dir($tmpDir)) {
+                    mkdir($tmpDir, 0755, true);
+                }
+                $tmpFile = $tmpDir . '/' . mt_rand(100000, 999999) . '.png';
+                $img->encode('png')->save($tmpFile);
+
+                return '<img src="/_tmp/' . basename($tmpFile) . '">';
+
             case self::RETURN_TYPE_DATA_URL:
-                return $img->encode('data-uri')->getEncoded();
+                return '![Image](' . $img->encode('data-url')->getEncoded() . ')';
 
             case self::RETURN_TYPE_PNG:
                 return $img->encode('png')->getEncoded();

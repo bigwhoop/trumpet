@@ -49,11 +49,15 @@ class CodeCommand implements Command
     {
         $fileName = $params->getFirstArgument();
 
-        if (!$executionContext->hasFileInWorkingDirectory($fileName)) {
-            throw new ExecutionFailedException("File '$fileName' does not exist.");
-        }
+        if (is_readable($fileName)) {
+            $contents = file_get_contents($fileName);
+        } else {
+            if (!$executionContext->hasFileInWorkingDirectory($fileName)) {
+                throw new ExecutionFailedException("File '$fileName' does not exist.");
+            }
 
-        $contents = $executionContext->getContentsOfFileInWorkingDirectory($fileName);
+            $contents = $executionContext->getContentsOfFileInWorkingDirectory($fileName);
+        }
 
         switch ($params->getSecondArgument()) {
             case 'class':
@@ -66,6 +70,20 @@ class CodeCommand implements Command
                 }
 
                 return $this->wrapLines($result->getClass($className)->getSource());
+
+            case 'abstract':
+                $result = $this->parser->parse($contents);
+
+                $out = [];
+                foreach ($result->getClasses() as $class) {
+                    $out[] = $class->getFullName();
+                    foreach ($class->getMethods() as $method) {
+                        $out[] = ' ' . ($method->isStatic() ? 'static ' : '') . $method->getName() . '()';
+                    }
+                    $out[] = '';
+                }
+
+                return $this->wrapLines($out);
 
             case 'method':
                 $className = $params->getArgument(2);

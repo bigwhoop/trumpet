@@ -41,12 +41,15 @@ class SlidesParam implements Param
                 $slides[] = new Slide($line);
                 $slides[] = new Slide('');
             } elseif ($this->isHeader2($line)) {
-                if ($slides[count($slides) - 1]->content === '') {
+                if (!empty($slides) && $slides[count($slides) - 1]->content === '') {
                     $slides[count($slides) - 1]->addLine($line);
                 } else {
                     $slides[] = new Slide($line);
                 }
             } else {
+                if (empty($slides)) {
+                    $slides[] = new Slide('');
+                }
                 $slides[count($slides) - 1]->addLine($line);
             }
         }

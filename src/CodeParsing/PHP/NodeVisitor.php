@@ -57,7 +57,7 @@ class NodeVisitor extends NodeVisitorAbstract
             $fullyQualifiedName = $node->namespacedName->toString();
             $this->currentClass = new PHPClass($fullyQualifiedName, [], $this->getSource($node));
         } elseif ($node instanceof Node\Stmt\ClassMethod) {
-            $this->currentClass->addMethod(new PHPMethod($node->name, $this->getSource($node)));
+            $this->currentClass->addMethod(new PHPMethod($node->name, $node->isStatic(), $this->getSource($node)));
         } elseif ($node instanceof Node\Stmt\Function_) {
             $fullyQualifiedName = $node->namespacedName->toString();
             $this->result->addFunction(new PHPFunction($fullyQualifiedName, $this->getSource($node)));

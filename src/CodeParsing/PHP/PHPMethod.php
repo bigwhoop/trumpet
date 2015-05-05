@@ -18,13 +18,18 @@ class PHPMethod
     /** @var string */
     private $name = '';
 
+    /** @var bool */
+    private $isStatic = false;
+
     /**
      * @param string $name
+     * @param bool $isStatic
      * @param string $source
      */
-    public function __construct($name, $source)
+    public function __construct($name, $isStatic, $source)
     {
         $this->name = $name;
+        $this->isStatic = $isStatic;
         $this->source = $source;
     }
 
@@ -34,5 +39,13 @@ class PHPMethod
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isStatic()
+    {
+        return $this->isStatic;
     }
 }
