@@ -19,7 +19,7 @@ class Slide
     /**
      * @param string $content
      */
-    public function __construct($content)
+    public function __construct($content = '')
     {
         $this->content = $content;
     }
@@ -34,5 +34,13 @@ class Slide
         } else {
             $this->content .= "\n$content";
         }
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEmpty()
+    {
+        return $this->content === '';
     }
 }

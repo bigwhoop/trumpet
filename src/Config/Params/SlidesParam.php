@@ -35,26 +35,28 @@ class SlidesParam implements Param
         }
 
         /** @var Slide[] $slides */
-        $slides = [];
+        $slides = [new Slide()];
         foreach ($lines as $line) {
+            $currentSlideIsEmpty = $slides[count($slides) - 1]->isEmpty();
             if ($this->isHeader1($line)) {
-                $slides[] = new Slide($line);
-                $slides[] = new Slide('');
+                if ($currentSlideIsEmpty) {
+                    $slides[count($slides) - 1]->addLine($line);
+                } else {
+                    $slides[] = new Slide($line);
+                }
+                $slides[] = new Slide();
             } elseif ($this->isHeader2($line)) {
-                if (!empty($slides) && $slides[count($slides) - 1]->content === '') {
+                if ($currentSlideIsEmpty) {
                     $slides[count($slides) - 1]->addLine($line);
                 } else {
                     $slides[] = new Slide($line);
                 }
             } else {
-                if (empty($slides)) {
-                    $slides[] = new Slide('');
-                }
                 $slides[count($slides) - 1]->addLine($line);
             }
         }
 
-        if ($slides[count($slides) - 1]->content === '') {
+        if ($slides[count($slides) - 1]->isEmpty()) {
             unset($slides[count($slides) - 1]);
         }
 

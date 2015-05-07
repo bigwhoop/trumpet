@@ -70,7 +70,7 @@ class ImageCommand implements Command
         $img = $this->imageManager->make($executionContext->getPathOfFileInWorkingDirectory($fileName));
 
         if (!$params->hasSecondArgument()) {
-            return $this->returnImage($img);
+            return $this->returnImage($img, $params);
         }
 
         $matches = [];
@@ -115,17 +115,18 @@ class ImageCommand implements Command
                 break;
         }
 
-        return $this->returnImage($img);
+        return $this->returnImage($img, $params);
     }
 
     /**
      * @param Image $img
+     * @param CommandParams $params
      *
      * @return string
      *
      * @throws ExecutionFailedException
      */
-    private function returnImage(Image $img)
+    private function returnImage(Image $img, CommandParams $params)
     {
         switch ($this->returnType) {
             case self::RETURN_TYPE_FILE:
@@ -133,7 +134,7 @@ class ImageCommand implements Command
                 if (!is_dir($tmpDir)) {
                     mkdir($tmpDir, 0755, true);
                 }
-                $tmpFile = $tmpDir . '/' . mt_rand(100000, 999999) . '.png';
+                $tmpFile = $tmpDir . '/' . md5($params->getParams()) . '.png';
                 $img->encode('png')->save($tmpFile);
 
                 return '<img src="/_tmp/' . basename($tmpFile) . '">';
