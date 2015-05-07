@@ -30,7 +30,7 @@ class CodeCommandTest extends TestCase
     {
         $expected = $this->indentText(file_get_contents($this->ctx->getWorkingDirectory().'/Calc.php'));
         $actual = $this->cmd->execute(new CommandParams('Calc.php'), $this->ctx);
-        $this->assertEquals($expected, $actual);
+        $this->assertSourceCode($expected, $actual);
     }
 
     /**
@@ -72,7 +72,7 @@ class Calc
 CODE;
         $expected = $this->indentText($expected);
         $actual = $this->cmd->execute(new CommandParams('Calc.php class My\Test\Ns\Calc'), $this->ctx);
-        $this->assertEquals($expected, $actual);
+        $this->assertSourceCode($expected, $actual);
     }
 
     /**
@@ -91,7 +91,7 @@ public static function create()
 CODE;
         $expected = $this->indentText($expected);
         $actual = $this->cmd->execute(new CommandParams('Calc.php method My\Test\Ns\Calc create'), $this->ctx);
-        $this->assertEquals($expected, $actual);
+        $this->assertSourceCode($expected, $actual);
     }
 
     /**
@@ -113,7 +113,7 @@ public function add($a, $b)
 CODE;
         $expected = $this->indentText($expected);
         $actual = $this->cmd->execute(new CommandParams('Calc.php method My\Test\Ns\Calc add'), $this->ctx);
-        $this->assertEquals($expected, $actual);
+        $this->assertSourceCode($expected, $actual);
     }
 
     /**
@@ -123,7 +123,7 @@ CODE;
     {
         $expected = $this->indentText('class Calc');
         $actual = $this->cmd->execute(new CommandParams('Calc.php line 5'), $this->ctx);
-        $this->assertEquals($expected, $actual);
+        $this->assertSourceCode($expected, $actual);
     }
 
     /**
@@ -139,10 +139,10 @@ CODE;
         $expected = $this->indentText($expected);
 
         $actual = $this->cmd->execute(new CommandParams('Calc.php line 30-32'), $this->ctx);
-        $this->assertEquals($expected, $actual);
+        $this->assertSourceCode($expected, $actual);
 
         $actual = $this->cmd->execute(new CommandParams('Calc.php line 32-30'), $this->ctx);
-        $this->assertEquals($expected, $actual);
+        $this->assertSourceCode($expected, $actual);
     }
 
     /**
@@ -164,22 +164,6 @@ function addNumbers($a, $b)
 CODE;
         $expected = $this->indentText($expected);
         $actual = $this->cmd->execute(new CommandParams('Calc.php function My\Test\Ns\addNumbers'), $this->ctx);
-        $this->assertEquals($expected, $actual);
-    }
-
-    /**
-     * @param string $text
-     * @param string $indent
-     *
-     * @return string
-     */
-    private function indentText($text, $indent = '    ')
-    {
-        $lines = explode("\n", str_replace("\r", '', $text));
-        $lines = array_map(function ($line) use ($indent) {
-            return $indent.$line;
-        }, $lines);
-
-        return  implode("\n", $lines);
+        $this->assertSourceCode($expected, $actual);
     }
 }

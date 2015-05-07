@@ -30,7 +30,7 @@ class IncludeCommandTest extends TestCase
     {
         $expected = file_get_contents($this->ctx->getWorkingDirectory().'/Calc.php');
         $actual = $this->cmd->execute(new CommandParams('Calc.php'), $this->ctx);
-        $this->assertEquals($expected, $actual);
+        $this->assertSourceCode($expected, $actual);
     }
 
     /**
@@ -40,7 +40,7 @@ class IncludeCommandTest extends TestCase
     {
         $expected = '    public static function create()';
         $actual = $this->cmd->execute(new CommandParams('Calc.php line 10'), $this->ctx);
-        $this->assertEquals($expected, $actual);
+        $this->assertSourceCode($expected, $actual);
     }
 
     /**
@@ -56,6 +56,6 @@ class IncludeCommandTest extends TestCase
 CODE;
 
         $actual = $this->cmd->execute(new CommandParams('Calc.php line 10-13'), $this->ctx);
-        $this->assertEquals($expected, $actual);
+        $this->assertSourceCode($expected, $actual);
     }
 }

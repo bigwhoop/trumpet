@@ -31,7 +31,7 @@ class Foo
     protected $var = 12.54;
 }
 CODE;
-        $this->_testSourceCode($expectedSource, $class->getSource());
+        $this->assertSourceCode($expectedSource, $class->getSource());
     }
 
     public function testClassWithNamespace()
@@ -48,7 +48,7 @@ class Foo
     protected $var = 12.54;
 }
 CODE;
-        $this->_testSourceCode($expectedSource, $class->getSource());
+        $this->assertSourceCode($expectedSource, $class->getSource());
     }
 
     public function testClassMethods()
@@ -90,7 +90,7 @@ public function __construct($value)
     $this->value = $value;
 }
 CODE;
-        $this->_testClassMethod($class, '__construct', $expectedSource);
+        $this->assertClassMethod($class, '__construct', $expectedSource);
 
         $expectedSource = <<<'CODE'
 public function getValue()
@@ -98,7 +98,7 @@ public function getValue()
     return $this->value;
 }
 CODE;
-        $this->_testClassMethod($class, 'getValue', $expectedSource);
+        $this->assertClassMethod($class, 'getValue', $expectedSource);
 
         $expectedSource = <<<'CODE'
 public function add(\Number $n)
@@ -106,7 +106,7 @@ public function add(\Number $n)
     return new \Number($this->value + $n->getValue());
 }
 CODE;
-        $this->_testClassMethod($class, 'add', $expectedSource);
+        $this->assertClassMethod($class, 'add', $expectedSource);
     }
 
     public function testFunctions()
@@ -125,7 +125,7 @@ function add($a, $b)
     return $a + $b;
 }
 CODE;
-        $this->_testSourceCode($expectedSource, $func->getSource());
+        $this->assertSourceCode($expectedSource, $func->getSource());
 
         $this->assertTrue($result->hasFunction('sub'));
         $func = $result->getFunction('sub');
@@ -137,7 +137,7 @@ function sub($a, $b)
     return $a - $b;
 }
 CODE;
-        $this->_testSourceCode($expectedSource, $func->getSource());
+        $this->assertSourceCode($expectedSource, $func->getSource());
     }
 
     /**
@@ -145,19 +145,10 @@ CODE;
      * @param string   $methodName
      * @param string   $expectedSource
      */
-    private function _testClassMethod(PHPClass $class, $methodName, $expectedSource)
+    private function assertClassMethod(PHPClass $class, $methodName, $expectedSource)
     {
         $this->assertTrue($class->hasMethod($methodName));
         $this->assertInstanceOf(PHPMethod::class, $class->getMethod($methodName));
-        $this->_testSourceCode($expectedSource, $class->getMethod($methodName)->getSource());
-    }
-
-    /**
-     * @param string $expected
-     * @param string $actual
-     */
-    private function _testSourceCode($expected, $actual)
-    {
-        $this->assertEquals(str_replace("\r", '', $expected), str_replace("\r", '', $actual));
+        $this->assertSourceCode($expectedSource, $class->getMethod($methodName)->getSource());
     }
 }
