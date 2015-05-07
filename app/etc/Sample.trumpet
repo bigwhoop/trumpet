@@ -1,0 +1,29 @@
+title: Our test presentation
+subtitle: An optional sub-title
+date: 2015-05-20
+authors:
+- Max Microwave, Some Company Lts., @themax
+- name: Freddy Frypan
+  email: freddy@example.org
+  twitter: freddy
+  company: Another Company
+  website: www.example.org
+  skype: freedy.frypan
+
+slides: |
+  # This is a title, it's on its own page
+  
+  ## This is a subtitle, it will create a new slide
+  
+  This is some example text.
+  
+  ### And this is a sub-subtitle
+  
+  And some more text. Yay.
+  
+  ## A new slide?
+  
+  Yep, like I told you. Titles and subtitles always create a new slide.
+  
+  - These are
+  - bullet points.

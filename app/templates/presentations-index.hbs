@@ -5,11 +5,17 @@
         {{#each presentations}}
             <div class="presentation">
                 <a href="{{url}}">
-                    <i class="fa fa-file-o fa-3x"></i><br>
+                    <i class="fa fa-file-powerpoint-o fa-3x"></i><br>
                     {{title}}
                 </a>
             </div>
         {{/each}}
+        <div class="presentation new">
+            <a href="/?new">
+                <i class="fa fa-plus-circle fa-3x"></i><br>
+                Create New Presentation 
+            </a>
+        </div>
     </div>
     <div class="clearfix"></div>
 </div>

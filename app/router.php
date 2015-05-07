@@ -49,10 +49,51 @@ $requestUriParts = array_filter(explode('/', trim(urldecode($_SERVER['REQUEST_UR
     return !empty($e);
 });
 
+if (!empty($requestUriParts) && $requestUriParts[0] == '?new') {
+    $idx = 1;
+    do {
+        $newPresentationPath = $cwd . '/Presentation ' . $idx++ . '.trumpet';
+    } while (file_exists($newPresentationPath));
+    
+    copy(__DIR__ . '/etc/Sample.trumpet', $newPresentationPath);
+    
+    header('location: /', 302);
+    exit();
+}
+
 $trumpetFiles = array_map(function ($path) {
     return realpath($path);
 }, glob("$cwd/*.trumpet"));
 
+// Trumpet assets
+if (!empty($requestUriParts) && $requestUriParts[0] === 'internal') {
+    array_shift($requestUriParts);
+    $internalPath = __DIR__.'/www/'.implode('/', $requestUriParts);
+    if (file_exists($internalPath)) {
+        $ext = pathinfo($internalPath, PATHINFO_EXTENSION);
+        switch ($ext) {
+            case 'css': $contentType = 'text/css'; break;
+            case 'svg': $contentType = 'image/svg+xml'; break;
+            default:
+                renderInternalViewAndSendResponse(500, '500', [
+                    'title' => 'File Not Found',
+                    'message' => "Content type for extension of file '$internalPath' was not defined.",
+                ]);
+        }
+
+        http_response_code(200);
+        header('content-type: '.$contentType);
+        readfile($internalPath);
+        exit();
+    }
+
+    renderInternalViewAndSendResponse(404, '404', [
+        'title' => 'File Not Found',
+        'message' => 'Trumpet web asset not found.',
+    ]);
+}
+
+// No files
 if (empty($trumpetFiles)) {
     renderInternalViewAndSendResponse(404, '404', [
         'title' => 'No *.trumpet Files Found',
@@ -80,33 +121,6 @@ if (empty($requestUriParts)) {
     renderInternalViewAndSendResponse(200, 'presentations-index', [
         'title' => 'Presentations',
         'presentations' => $presentations,
-    ]);
-}
-
-if ($requestUriParts[0] === 'internal') {
-    array_shift($requestUriParts);
-    $internalPath = __DIR__.'/www/'.implode('/', $requestUriParts);
-    if (file_exists($internalPath)) {
-        $ext = pathinfo($internalPath, PATHINFO_EXTENSION);
-        switch ($ext) {
-            case 'css': $contentType = 'text/css'; break;
-            case 'svg': $contentType = 'image/svg+xml'; break;
-            default:
-                renderInternalViewAndSendResponse(500, '500', [
-                    'title' => 'File Not Found',
-                    'message' => "Content type for extension of file '$internalPath' was not defined.",
-                ]);
-        }
-
-        http_response_code(200);
-        header('content-type: '.$contentType);
-        readfile($internalPath);
-        exit();
-    }
-
-    renderInternalViewAndSendResponse(404, '404', [
-        'title' => 'File Not Found',
-        'message' => 'Trumpet web asset not found.',
     ]);
 }
 

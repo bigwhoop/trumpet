@@ -51,6 +51,10 @@ class Config
             throw new ConfigException($e->getMessage(), 0, $e);
         }
 
+        if (!is_array($data)) {
+            throw new ConfigException("Trumpet file '$path' is invalid. It probably is empty.");
+        }
+        
         $presentation = new Presentation();
 
         foreach ($data as $key => $value) {

@@ -75,12 +75,27 @@ class CodeCommand implements Command
                 $result = $this->parser->parse($contents);
 
                 $out = [];
-                foreach ($result->getClasses() as $class) {
-                    $out[] = $class->getFullName();
-                    foreach ($class->getMethods() as $method) {
-                        $out[] = ' '.($method->isStatic() ? 'static ' : '').$method->getName().'()';
+                
+                $classes = $result->getClasses();
+                if (count($classes)) {
+                    $out[] = 'CLASSES (' . count($classes) . ')';
+                    foreach ($classes as $class) {
+                        $out[] = ' ' . $class->getFullName();
+                        foreach ($class->getMethods() as $method) {
+                            $out[] = '  ' . ($method->isStatic() ? 'static ' : '') . $method->getName() . '()';
+                        }
                     }
-                    $out[] = '';
+                }
+                
+                $functions = $result->getFunctions();
+                if (count($functions)) {
+                    if (!empty($out)) {
+                        $out[] = '';
+                    }
+                    $out[] = 'FUNCTIONS (' . count($functions) . ')';
+                    foreach ($functions as $function) {
+                        $out[] = ' ' . $function->getFullName();
+                    }
                 }
 
                 return $this->wrapLines($out);
