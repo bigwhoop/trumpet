@@ -23,7 +23,7 @@ class PHPMethod
 
     /**
      * @param string $name
-     * @param bool $isStatic
+     * @param bool   $isStatic
      * @param string $source
      */
     public function __construct($name, $isStatic, $source)

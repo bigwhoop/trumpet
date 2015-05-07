@@ -85,7 +85,7 @@ if (empty($requestUriParts)) {
 
 if ($requestUriParts[0] === 'internal') {
     array_shift($requestUriParts);
-    $internalPath = __DIR__ . '/www/' . implode('/', $requestUriParts);
+    $internalPath = __DIR__.'/www/'.implode('/', $requestUriParts);
     if (file_exists($internalPath)) {
         $ext = pathinfo($internalPath, PATHINFO_EXTENSION);
         switch ($ext) {
@@ -99,7 +99,7 @@ if ($requestUriParts[0] === 'internal') {
         }
 
         http_response_code(200);
-        header('content-type: ' . $contentType);
+        header('content-type: '.$contentType);
         readfile($internalPath);
         exit();
     }

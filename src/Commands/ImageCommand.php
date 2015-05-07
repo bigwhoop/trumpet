@@ -10,7 +10,6 @@
 
 namespace Bigwhoop\Trumpet\Commands;
 
-use Bigwhoop\Trumpet\Presentation\Theme;
 use Intervention\Image\Constraint;
 use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
@@ -31,7 +30,7 @@ class ImageCommand implements Command
     private $returnType = self::RETURN_TYPE_FILE;
 
     /**
-     * @param ImageManager $manager
+     * @param ImageManager            $manager
      * @param CommandExecutionContext $context
      */
     public function __construct(ImageManager $manager, CommandExecutionContext $context)
@@ -119,7 +118,7 @@ class ImageCommand implements Command
     }
 
     /**
-     * @param Image $img
+     * @param Image         $img
      * @param CommandParams $params
      *
      * @return string
@@ -130,17 +129,17 @@ class ImageCommand implements Command
     {
         switch ($this->returnType) {
             case self::RETURN_TYPE_FILE:
-                $tmpDir = $this->executionContext->getWorkingDirectory() . '/_tmp';
+                $tmpDir = $this->executionContext->getWorkingDirectory().'/_tmp';
                 if (!is_dir($tmpDir)) {
                     mkdir($tmpDir, 0755, true);
                 }
-                $tmpFile = $tmpDir . '/' . md5($params->getParams()) . '.png';
+                $tmpFile = $tmpDir.'/'.md5($params->getParams()).'.png';
                 $img->encode('png')->save($tmpFile);
 
-                return '<img src="/_tmp/' . basename($tmpFile) . '">';
+                return '<img src="/_tmp/'.basename($tmpFile).'">';
 
             case self::RETURN_TYPE_DATA_URL:
-                return '![Image](' . $img->encode('data-url')->getEncoded() . ')';
+                return '![Image]('.$img->encode('data-url')->getEncoded().')';
 
             case self::RETURN_TYPE_PNG:
                 return $img->encode('png')->getEncoded();

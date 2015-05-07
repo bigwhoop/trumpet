@@ -78,7 +78,7 @@ class CodeCommand implements Command
                 foreach ($result->getClasses() as $class) {
                     $out[] = $class->getFullName();
                     foreach ($class->getMethods() as $method) {
-                        $out[] = ' ' . ($method->isStatic() ? 'static ' : '') . $method->getName() . '()';
+                        $out[] = ' '.($method->isStatic() ? 'static ' : '').$method->getName().'()';
                     }
                     $out[] = '';
                 }
