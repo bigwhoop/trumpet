@@ -59,12 +59,14 @@ class AuthorsParam implements Param
         }
 
         while (!empty($parts)) {
-            if (substr($parts[0], 0, 1) === '@') {
+            if (filter_var($parts[0], FILTER_VALIDATE_EMAIL)) {
+                $author->email = array_shift($parts);
+            } elseif (substr($parts[0], 0, 1) === '@') {
                 $author->twitter = array_shift($parts);
             } elseif (substr($parts[0], 0, 4) === 'http') {
                 $author->website = array_shift($parts);
             } else {
-                break;
+                array_shift($parts);
             }
         }
 
@@ -81,55 +83,79 @@ class AuthorsParam implements Param
      */
     private function parseArrayEntry($idx, array $entry)
     {
-        if (!array_key_exists('name', $entry) || !is_string($entry['name'])) {
-            throw new ConfigException("Author#$idx has to have a 'name' property that is a string.");
-        }
+        $fnCreateIsStringValidator = function ($idx, $key) {
+            return function ($value) use ($idx, $key) {
+                if (!is_string($value)) {
+                    throw new ConfigException("Author#$idx must have a '$key' property that is a string.");
+                }
+            };
+        };
 
-        $author = new Author($entry['name']);
+        $name = $this->pickFromArray($entry, 'name', '', $fnCreateIsStringValidator($idx, 'name'));
 
-        if (array_key_exists('company', $entry)) {
-            if (!is_string($entry['company'])) {
-                throw new ConfigException("Author#$idx has to have a 'company' property that is a string.");
-            }
-            $author->company = $entry['company'];
-        }
+        $author = new Author($name);
 
-        if (array_key_exists('email', $entry)) {
-            if (!is_string($entry['email'])) {
-                throw new ConfigException("Author#$idx has to have a 'email' property that is a string.");
-            }
-            $author->email = $entry['email'];
-        }
-
-        if (array_key_exists('twitter', $entry)) {
-            if (!is_string($entry['twitter'])) {
-                throw new ConfigException("Author#$idx has to have a 'twitter' property that is a string.");
-            }
-            $handle = $entry['twitter'];
-            if (substr($handle, 0, 1) !== '@') {
-                $handle = '@'.$handle;
-            }
-            $author->twitter = $handle;
-        }
-
-        if (array_key_exists('website', $entry)) {
-            if (!is_string($entry['website'])) {
-                throw new ConfigException("Author#$idx has to have a 'website' property that is a string.");
-            }
-            $url = $entry['website'];
-            if (substr($url, 0, 1) !== 'http') {
-                $url = 'http://'.$url;
-            }
-            $author->website = $url;
-        }
-
-        if (array_key_exists('skype', $entry)) {
-            if (!is_string($entry['skype'])) {
-                throw new ConfigException("Author#$idx has to have a 'skype' property that is a string.");
-            }
-            $author->skype = $entry['skype'];
-        }
+        $author->company = $this->pickFromArray($entry, 'company', '', $fnCreateIsStringValidator($idx, 'company'));
+        $author->email   = $this->pickFromArray($entry, 'email', '', $fnCreateIsStringValidator($idx, 'email'));
+        $author->twitter = $this->formatTwitterHandle($this->pickFromArray($entry, 'twitter', '', $fnCreateIsStringValidator($idx, 'twitter')));
+        $author->website = $this->formatWebsite($this->pickFromArray($entry, 'website', '', $fnCreateIsStringValidator($idx, 'website')));
+        $author->email   = $this->pickFromArray($entry, 'email', '', $fnCreateIsStringValidator($idx, 'email'));
+        $author->skype   = $this->pickFromArray($entry, 'skype', '', $fnCreateIsStringValidator($idx, 'skype'));
 
         return $author;
+    }
+
+    /**
+     * @param array    $params
+     * @param string   $key
+     * @param string   $defaultValue
+     * @param callable $validator
+     *
+     * @return mixed
+     *
+     * @throws ConfigException
+     */
+    private function pickFromArray(array $params, $key, $defaultValue, callable $validator)
+    {
+        if (!array_key_exists($key, $params)) {
+            return $defaultValue;
+        }
+
+        $value = $params[$key];
+        $validationResult = $validator($value);
+
+        if (is_string($validationResult) && $validationResult !== '') {
+            throw new ConfigException($validationResult);
+        }
+
+        return $value;
+    }
+
+    /**
+     * @param string $handle
+     *
+     * @return string
+     */
+    private function formatTwitterHandle($handle)
+    {
+        if ($handle != '' && substr($handle, 0, 1) !== '@') {
+            $handle = '@'.$handle;
+        }
+
+        return $handle;
+    }
+
+    /**
+     * @param string $url
+     *
+     * @return string
+     */
+    private function formatWebsite($url)
+    {
+        if ($url != '' && substr($url, 0, 4) !== 'http') {
+            $url = 'http://'.$url;
+        }
+
+        return $url;
     }
 }

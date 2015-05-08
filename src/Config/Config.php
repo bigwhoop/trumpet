@@ -54,7 +54,7 @@ class Config
         if (!is_array($data)) {
             throw new ConfigException("Trumpet file '$path' is invalid. It probably is empty.");
         }
-        
+
         $presentation = new Presentation();
 
         foreach ($data as $key => $value) {

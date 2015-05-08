@@ -75,26 +75,26 @@ class CodeCommand implements Command
                 $result = $this->parser->parse($contents);
 
                 $out = [];
-                
+
                 $classes = $result->getClasses();
                 if (count($classes)) {
-                    $out[] = 'CLASSES (' . count($classes) . ')';
+                    $out[] = 'CLASSES ('.count($classes).')';
                     foreach ($classes as $class) {
-                        $out[] = ' ' . $class->getFullName();
+                        $out[] = ' '.$class->getFullName();
                         foreach ($class->getMethods() as $method) {
-                            $out[] = '  ' . ($method->isStatic() ? 'static ' : '') . $method->getName() . '()';
+                            $out[] = '  '.($method->isStatic() ? 'static ' : '').$method->getName().'()';
                         }
                     }
                 }
-                
+
                 $functions = $result->getFunctions();
                 if (count($functions)) {
                     if (!empty($out)) {
                         $out[] = '';
                     }
-                    $out[] = 'FUNCTIONS (' . count($functions) . ')';
+                    $out[] = 'FUNCTIONS ('.count($functions).')';
                     foreach ($functions as $function) {
-                        $out[] = ' ' . $function->getFullName();
+                        $out[] = ' '.$function->getFullName();
                     }
                 }
 

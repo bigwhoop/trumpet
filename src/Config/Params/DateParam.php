@@ -23,15 +23,15 @@ class DateParam implements Param
     public function parse($value, Presentation $presentation)
     {
         if (is_int($value)) {
-            $presentation->date = new Date(\DateTime::createFromFormat('U', $value));
-
-            return;
-        }
-
-        if (!preg_match('#\d{4}-\d{1,2}-\d{1,2}#', $value)) {
+            $date = \DateTime::createFromFormat('U', $value);
+        } elseif (preg_match('#\d{4}-\d{1,2}-\d{1,2}#', $value)) {
+            $date = \DateTime::createFromFormat('Y-m-d', $value);
+        } else {
             throw new ConfigException('Dates must be a string in the format YYYY-MM-DD.');
         }
 
-        $presentation->date = new Date(\DateTime::createFromFormat('Y-m-d', $value));
+        $date->setTime(0, 0, 0);
+
+        $presentation->date = new Date($date);
     }
 }

@@ -8,7 +8,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
     {
         /** @var \DI\Container $container */
         $container = require __DIR__.'/../../app/etc/di.php';
-        $container->set('WorkingDirectory', __DIR__ . '/../assets');
+        $container->set('WorkingDirectory', __DIR__.'/../assets');
         $container->injectOn($this);
     }
 
