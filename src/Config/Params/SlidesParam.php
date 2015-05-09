@@ -13,7 +13,7 @@ namespace Bigwhoop\Trumpet\Config\Params;
 
 use Bigwhoop\Trumpet\Config\ConfigException;
 use Bigwhoop\Trumpet\Config\Presentation;
-use Bigwhoop\Trumpet\Config\Slide;
+use Bigwhoop\Trumpet\Config\Slides;
 
 class SlidesParam implements Param
 {
@@ -34,31 +34,20 @@ class SlidesParam implements Param
             throw new ConfigException('Slides must not be empty.');
         }
 
-        /** @var Slide[] $slides */
-        $slides = [new Slide()];
+        $slides = new Slides();
+
         foreach ($lines as $line) {
-            $currentSlideIsEmpty = $slides[count($slides) - 1]->isEmpty();
             if ($this->isHeader1($line)) {
-                if ($currentSlideIsEmpty) {
-                    $slides[count($slides) - 1]->addLine($line);
-                } else {
-                    $slides[] = new Slide($line);
-                }
-                $slides[] = new Slide();
+                $slides->addContentToNewSlide($line);
+                $slides->addBlankSlide();
             } elseif ($this->isHeader2($line)) {
-                if ($currentSlideIsEmpty) {
-                    $slides[count($slides) - 1]->addLine($line);
-                } else {
-                    $slides[] = new Slide($line);
-                }
+                $slides->addContentToNewSlide($line);
             } else {
-                $slides[count($slides) - 1]->addLine($line);
+                $slides->addContentToCurrentSlide($line);
             }
         }
 
-        if ($slides[count($slides) - 1]->isEmpty()) {
-            unset($slides[count($slides) - 1]);
-        }
+        $slides->trim();
 
         $presentation->slides = $slides;
     }

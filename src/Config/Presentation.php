@@ -25,12 +25,17 @@ class Presentation
     /** @var Author[] */
     public $authors = [];
 
-    /** @var Slide[] */
-    public $slides = [];
+    /** @var Slides */
+    public $slides;
 
     /** @var string */
     public $license = '';
 
     /** @var mixed */
     public $themeSettings;
+
+    public function __construct()
+    {
+        $this->slides = new Slides();
+    }
 }
