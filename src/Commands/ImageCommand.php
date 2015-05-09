@@ -16,9 +16,10 @@ use Intervention\Image\ImageManager;
 
 class ImageCommand implements Command
 {
-    const RETURN_TYPE_FILE     = 'file';
+    const RETURN_TYPE_URL      = 'url';
+    const RETURN_TYPE_PATH     = 'path';
     const RETURN_TYPE_DATA_URL = 'data-url';
-    const RETURN_TYPE_PNG      = 'png';
+    const RETURN_TYPE_DATA     = 'data';
 
     /** @var ImageManager */
     private $imageManager;
@@ -27,7 +28,7 @@ class ImageCommand implements Command
     private $executionContext;
 
     /** @var string */
-    private $returnType = self::RETURN_TYPE_FILE;
+    private $returnType = self::RETURN_TYPE_URL;
 
     /**
      * @param ImageManager            $manager
@@ -72,25 +73,7 @@ class ImageCommand implements Command
             return $this->returnImage($img, $params);
         }
 
-        $matches = [];
-        if (!preg_match('#(\d+)x(\d+)#', $params->getSecondArgument(), $matches)) {
-            throw new ExecutionFailedException("Second argument must be in format WIDTHxHEIGHT. For example 100x50, 0x50 or 100x0, but not 0x0.");
-        }
-
-        $width  = (int) $matches[1];
-        $height = (int) $matches[2];
-
-        if ($width === 0 && $height === 0) {
-            throw new ExecutionFailedException("Either the width or the height must be greater than zero.");
-        }
-
-        if ($width === 0) {
-            $width = null;
-        }
-
-        if ($height === 0) {
-            $height = null;
-        }
+        list($width, $height) = $this->parseDimension($params->getSecondArgument());
 
         switch ($params->getThirdArgument()) {
             case 'stretch':
@@ -102,9 +85,9 @@ class ImageCommand implements Command
                 break;
 
             case 'crop':
-                $x = (int) $params->getArgument(3);
-                $y = (int) $params->getArgument(4);
-                $img->crop($width, $height, $x === 0 ? null : $x, $y === 0 ? null : $y);
+                $x = $this->filterIntOrNullArgument($params->getArgument(3));
+                $y = $this->filterIntOrNullArgument($params->getArgument(4));
+                $img->crop($width, $height, $x, $y);
                 break;
 
             default:
@@ -118,6 +101,43 @@ class ImageCommand implements Command
     }
 
     /**
+     * @param string $value
+     *
+     * @return int|null
+     */
+    private function filterIntOrNullArgument($value)
+    {
+        $value = (int) $value;
+        if ($value < 1) {
+            $value = null;
+        }
+
+        return $value;
+    }
+
+    /**
+     * @param string $dimension
+     *
+     * @return array
+     */
+    private function parseDimension($dimension)
+    {
+        $matches = [];
+        if (!preg_match('#(\d+)x(\d+)#', $dimension, $matches)) {
+            throw new ExecutionFailedException("Dimension argument be in format WIDTHxHEIGHT. For example 100x50, 0x50 or 100x0, but not 0x0.");
+        }
+
+        $width  = $this->filterIntOrNullArgument($matches[1]);
+        $height = $this->filterIntOrNullArgument($matches[2]);
+
+        if ($width === null && $height === null) {
+            throw new ExecutionFailedException("Either the width or the height must be greater than zero.");
+        }
+
+        return [$width, $height];
+    }
+
+    /**
      * @param Image         $img
      * @param CommandParams $params
      *
@@ -128,24 +148,39 @@ class ImageCommand implements Command
     private function returnImage(Image $img, CommandParams $params)
     {
         switch ($this->returnType) {
-            case self::RETURN_TYPE_FILE:
-                $tmpDir = $this->executionContext->getWorkingDirectory().'/_tmp';
-                if (!is_dir($tmpDir)) {
-                    mkdir($tmpDir, 0755, true);
-                }
+            case self::RETURN_TYPE_URL:
+                case self::RETURN_TYPE_PATH:
+                $tmpDir = $this->ensureTempDirectory();
                 $tmpFile = $tmpDir.'/'.md5($params->getParams()).'.png';
                 $img->encode('png')->save($tmpFile);
+
+                if ($this->returnType === self::RETURN_TYPE_PATH) {
+                    return $tmpFile;
+                }
 
                 return '<img src="/_tmp/'.basename($tmpFile).'">';
 
             case self::RETURN_TYPE_DATA_URL:
                 return '![Image]('.$img->encode('data-url')->getEncoded().')';
 
-            case self::RETURN_TYPE_PNG:
+            case self::RETURN_TYPE_DATA:
                 return $img->encode('png')->getEncoded();
 
             default:
                 throw new ExecutionFailedException("Invalid return type '{$this->returnType}' detected.");
         }
+    }
+
+    /**
+     * @return string
+     */
+    private function ensureTempDirectory()
+    {
+        $tmpDir = $this->executionContext->getWorkingDirectory().'/_tmp';
+        if (!is_dir($tmpDir)) {
+            mkdir($tmpDir, 0755, true);
+        }
+
+        return $tmpDir;
     }
 }

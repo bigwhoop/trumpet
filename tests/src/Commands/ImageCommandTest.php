@@ -23,11 +23,9 @@ class ImageCommandTest extends TestCase
      */
     private $ctx;
 
-    public function setUp()
+    public function testToken()
     {
-        parent::setUp();
-
-        $this->cmd->setReturnType(ImageCommand::RETURN_TYPE_PNG);
+        $this->assertEquals('image', $this->cmd->getToken());
     }
 
     /**
@@ -35,8 +33,7 @@ class ImageCommandTest extends TestCase
      */
     public function testFile()
     {
-        $file = $this->cmd->execute(new CommandParams('test.png'), $this->ctx);
-        $this->assertImage($file, 768, 576);
+        $this->assertImage('test.png', 768, 576);
     }
 
     /**
@@ -44,8 +41,7 @@ class ImageCommandTest extends TestCase
      */
     public function testResizingStandard()
     {
-        $file = $this->cmd->execute(new CommandParams('test.png 100x100'), $this->ctx);
-        $this->assertImage($file, 100, 75);
+        $this->assertImage('test.png 100x100', 100, 75);
     }
 
     /**
@@ -53,8 +49,7 @@ class ImageCommandTest extends TestCase
      */
     public function testResizingStretch()
     {
-        $file = $this->cmd->execute(new CommandParams('test.png 100x100 stretch'), $this->ctx);
-        $this->assertImage($file, 100, 100);
+        $this->assertImage('test.png 100x100 stretch', 100, 100);
     }
 
     /**
@@ -62,8 +57,7 @@ class ImageCommandTest extends TestCase
      */
     public function testResizingFit()
     {
-        $file = $this->cmd->execute(new CommandParams('test.png 100x100 fit'), $this->ctx);
-        $this->assertImage($file, 100, 100);
+        $this->assertImage('test.png 100x100 fit', 100, 100);
     }
 
     /**
@@ -71,19 +65,28 @@ class ImageCommandTest extends TestCase
      */
     public function testResizingCrop()
     {
-        $file = $this->cmd->execute(new CommandParams('test.png 100x100 crop 50 50'), $this->ctx);
-        $this->assertImage($file, 100, 100);
+        $this->assertImage('test.png 100x100 crop 50 50', 100, 100);
     }
 
     /**
-     * @param string $imageData
+     * @param string $paramValue
      * @param int    $width
      * @param int    $height
      */
-    private function assertImage($imageData, $width, $height)
+    private function assertImage($paramValue, $width, $height)
     {
+        $this->cmd->setReturnType(ImageCommand::RETURN_TYPE_DATA);
+        $imageData = $this->cmd->execute(new CommandParams($paramValue), $this->ctx);
+
         $img = imagecreatefromstring($imageData);
         $this->assertEquals($width, imagesx($img));
         $this->assertEquals($height, imagesy($img));
+
+        $this->cmd->setReturnType(ImageCommand::RETURN_TYPE_PATH);
+        $imagePath = $this->cmd->execute(new CommandParams($paramValue), $this->ctx);
+
+        list($actualWidth, $actualHeight) = getimagesize($imagePath, $info);
+        $this->assertEquals($width, $actualWidth);
+        $this->assertEquals($height, $actualHeight);
     }
 }
