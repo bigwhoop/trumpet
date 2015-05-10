@@ -58,19 +58,17 @@ $definitions = [
         return $config;
     }),
 
-    'Bigwhoop\Trumpet\Presentation\Theme' => DI\object('Bigwhoop\Trumpet\Presentation\HandlebarsTheme')
+    'Bigwhoop\Trumpet\Presentation\Theming\Theme' => DI\object('Bigwhoop\Trumpet\Presentation\Theming\HandlebarsTheme')
         ->constructor(DI\link('ThemeDirectory')),
 
     'Bigwhoop\Trumpet\Presentation\Presenter' => DI\factory(function (DIC $c) {
         /** @var HandlebarsPresenter $presenter */
         $presenter = $c->get('Bigwhoop\Trumpet\Presentation\HandlebarsPresenter');
-        $presenter->addSlideRenderer($c->get('Bigwhoop\Trumpet\Presentation\CommandsRenderer'));
-        $presenter->addSlideRenderer($c->get('Bigwhoop\Trumpet\Presentation\MarkdownExtraSlideRenderer'));
+        $presenter->addSlideRenderer($c->get('Bigwhoop\Trumpet\Presentation\SlideRendering\CommandsRenderer'));
+        $presenter->addSlideRenderer($c->get('Bigwhoop\Trumpet\Presentation\SlideRendering\MarkdownExtraSlideRenderer'));
 
         return $presenter;
     }),
-
-    'Bigwhoop\Trumpet\Presentation\SlideRenderer' => DI\object('Bigwhoop\Trumpet\Presentation\MarkdownExtraSlideRenderer'),
 
     'Handlebars\Handlebars' => DI\factory(function () {
         $hbs = new Handlebars();

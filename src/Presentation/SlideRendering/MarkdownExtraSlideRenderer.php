@@ -9,16 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Bigwhoop\Trumpet\Presentation;
+namespace Bigwhoop\Trumpet\Presentation\SlideRendering;
 
 use Bigwhoop\Trumpet\Config\Slide;
 
-interface SlideRenderer
+class MarkdownExtraSlideRenderer implements SlideRenderer
 {
     /**
-     * @param Slide $slide
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function render(Slide $slide);
+    public function render(Slide $slide)
+    {
+        return \Michelf\MarkdownExtra::defaultTransform($slide->content);
+    }
 }

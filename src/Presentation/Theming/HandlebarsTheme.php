@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Bigwhoop\Trumpet\Presentation;
+namespace Bigwhoop\Trumpet\Presentation\Theming;
 
 class HandlebarsTheme implements Theme
 {
@@ -72,8 +72,6 @@ class HandlebarsTheme implements Theme
 
     /**
      * @return string
-     *
-     * @throws ThemeException
      */
     private function getLayoutPath()
     {
@@ -84,8 +82,6 @@ class HandlebarsTheme implements Theme
      * @param string $name
      *
      * @return string
-     *
-     * @throws ThemeException
      */
     private function getAssetPath($name)
     {

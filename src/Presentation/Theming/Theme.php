@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Bigwhoop\Trumpet\Presentation;
+namespace Bigwhoop\Trumpet\Presentation\Theming;
 
 interface Theme
 {

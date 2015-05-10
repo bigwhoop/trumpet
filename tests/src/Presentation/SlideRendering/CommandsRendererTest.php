@@ -1,9 +1,9 @@
 <?php
 
-namespace Bigwhoop\Trumpet\Tests\Presentation;
+namespace Bigwhoop\Trumpet\Tests\Presentation\SlideRendering;
 
 use Bigwhoop\Trumpet\Config\Slide;
-use Bigwhoop\Trumpet\Presentation\CommandsRenderer;
+use Bigwhoop\Trumpet\Presentation\SlideRendering\CommandsRenderer;
 use Bigwhoop\Trumpet\Tests\TestCase;
 
 class CommandsRendererTest extends TestCase

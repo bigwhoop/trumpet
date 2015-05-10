@@ -13,6 +13,8 @@ namespace Bigwhoop\Trumpet\Presentation;
 
 use Bigwhoop\Trumpet\Config\Presentation;
 use Bigwhoop\Trumpet\Config\Slide;
+use Bigwhoop\Trumpet\Presentation\SlideRendering\SlideRenderer;
+use Bigwhoop\Trumpet\Presentation\Theming\Theme;
 use Handlebars\Handlebars;
 
 class HandlebarsPresenter implements Presenter

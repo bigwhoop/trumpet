@@ -12,7 +12,7 @@
 namespace Bigwhoop\Trumpet\Commands;
 
 use Bigwhoop\Trumpet\Exceptions\InvalidArgumentException;
-use Bigwhoop\Trumpet\Presentation\Theme;
+use Bigwhoop\Trumpet\Presentation\Theming\Theme;
 
 class CommandExecutionContext
 {
@@ -23,7 +23,7 @@ class CommandExecutionContext
     private $workingDir = '';
 
     /**
-     * @Inject({"Bigwhoop\Trumpet\Presentation\Theme","WorkingDirectory"})
+     * @Inject({"Bigwhoop\Trumpet\Presentation\Theming\Theme","WorkingDirectory"})
      *
      * @param Theme  $theme
      * @param string $workingDirectory

@@ -4,8 +4,8 @@ namespace Trumpet;
 
 use Bigwhoop\Trumpet\Config\Config;
 use Bigwhoop\Trumpet\Presentation\Presenter;
-use Bigwhoop\Trumpet\Presentation\Theme;
-use Bigwhoop\Trumpet\Presentation\ThemeException;
+use Bigwhoop\Trumpet\Presentation\Theming\Theme;
+use Bigwhoop\Trumpet\Presentation\Theming\ThemeException;
 use DI\Container as DIC;
 use Handlebars\Handlebars;
 
@@ -159,7 +159,7 @@ if (file_exists($cwd.'/'.$assetPath)) {
 
 // Theme asset
 /** @var Theme $theme */
-$theme = $dic->get('Bigwhoop\Trumpet\Presentation\Theme');
+$theme = $dic->get('Bigwhoop\Trumpet\Presentation\Theming\Theme');
 try {
     $asset = $theme->getAsset($assetPath);
 
