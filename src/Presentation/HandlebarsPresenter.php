@@ -55,7 +55,15 @@ class HandlebarsPresenter implements Presenter
             $this->renderSlide($slide);
         }
 
-        $out = $this->hbs->render($layout, $presentation);
+        $out = $this->hbs->render($layout, [
+            'title'          => $presentation->title,
+            'subtitle'       => $presentation->subtitle,
+            'date'           => $presentation->date->toString(),
+            'presenters'     => $presentation->authors,
+            'license'        => $presentation->license,
+            'theme_settings' => $presentation->themeSettings,
+            'slides'         => $presentation->slides->getAll(),
+        ]);
 
         return $out;
     }

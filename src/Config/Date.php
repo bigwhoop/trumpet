@@ -32,8 +32,16 @@ class Date
     /**
      * @return string
      */
-    public function __toString()
+    public function toString()
     {
         return $this->date->format($this->format);
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->toString();
     }
 }

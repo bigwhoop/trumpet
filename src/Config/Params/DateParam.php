@@ -23,7 +23,8 @@ class DateParam implements Param
     public function parse($value, Presentation $presentation)
     {
         if (is_int($value)) {
-            $date = \DateTime::createFromFormat('U', $value);
+            // We don't use format 'U' as the TZ would be UTC
+            $date = \DateTime::createFromFormat('Y-m-d', date('Y-m-d', $value));
         } elseif (preg_match('#\d{4}-\d{1,2}-\d{1,2}#', $value)) {
             $date = \DateTime::createFromFormat('Y-m-d', $value);
         } else {

@@ -16,9 +16,15 @@ class Slides implements \IteratorAggregate, \Countable
     /** @var Slide[] */
     private $slides = [];
 
+    /**
+     * @return Slide
+     */
     public function addBlankSlide()
     {
-        $this->slides[] = new Slide();
+        $slide = new Slide();
+        $this->slides[] = $slide;
+        
+        return $slide;
     }
 
     /**
@@ -36,12 +42,10 @@ class Slides implements \IteratorAggregate, \Countable
     {
         $slide = $this->getCurrentSlide();
         if (!$slide->isEmpty()) {
-            $slide = new Slide();
+            $slide = $this->addBlankSlide();
         }
 
         $slide->addLine($content);
-
-        $this->addSlide($slide);
     }
 
     /**
@@ -69,6 +73,14 @@ class Slides implements \IteratorAggregate, \Countable
         if ($this->getCurrentSlide()->isEmpty()) {
             unset($slides[count($slides) - 1]);
         }
+    }
+
+    /**
+     * @return Slide[]
+     */
+    public function getAll()
+    {
+        return $this->slides;
     }
 
     /**
