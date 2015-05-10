@@ -61,16 +61,16 @@ class CodeCommand implements Command
 
         switch ($params->getSecondArgument()) {
             case 'class':
-                return $this->findClass($contents, $params);
+                return $this->findClass($contents, $params, $fileName);
 
             case 'abstract':
-                return $this->findAbstract($contents, $params);
+                return $this->findAbstract($contents);
 
             case 'method':
-                return $this->findMethod($contents, $params);
+                return $this->findMethod($contents, $params, $fileName);
 
             case 'function':
-                return $this->findFunction($contents, $params);
+                return $this->findFunction($contents, $params, $fileName);
 
             case 'line':
                 return $this->findLines($contents, $params);
@@ -83,12 +83,13 @@ class CodeCommand implements Command
     /**
      * @param string        $contents
      * @param CommandParams $params
+     * @param string        $fileName
      *
      * @return string
      *
      * @throws ExecutionFailedException
      */
-    private function findClass($contents, CommandParams $params)
+    private function findClass($contents, CommandParams $params, $fileName)
     {
         $className = $params->getArgument(2);
         $result = $this->parser->parse($contents);
@@ -102,14 +103,13 @@ class CodeCommand implements Command
     }
 
     /**
-     * @param string        $contents
-     * @param CommandParams $params
+     * @param string $contents
      *
      * @return string
      *
      * @throws ExecutionFailedException
      */
-    private function findAbstract($contents, CommandParams $params)
+    private function findAbstract($contents)
     {
         $result = $this->parser->parse($contents);
 
@@ -143,12 +143,13 @@ class CodeCommand implements Command
     /**
      * @param string        $contents
      * @param CommandParams $params
+     * @param string        $fileName
      *
      * @return string
      *
      * @throws ExecutionFailedException
      */
-    private function findMethod($contents, CommandParams $params)
+    private function findMethod($contents, CommandParams $params, $fileName)
     {
         $className = $params->getArgument(2);
         $methodName = $params->getArgument(3);
@@ -171,12 +172,13 @@ class CodeCommand implements Command
     /**
      * @param string        $contents
      * @param CommandParams $params
+     * @param string        $fileName
      *
      * @return string
      *
      * @throws ExecutionFailedException
      */
-    private function findFunction($contents, CommandParams $params)
+    private function findFunction($contents, CommandParams $params, $fileName)
     {
         $functionName = $params->getArgument(2);
         $result = $this->parser->parse($contents);

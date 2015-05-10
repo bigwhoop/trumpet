@@ -76,6 +76,15 @@ CODE;
     }
 
     /**
+     * @expectedException \Bigwhoop\Trumpet\Commands\ExecutionFailedException
+     * @expectedExceptionMessage Class 'Calc' was not found in file 'Calc.php'. Available classes: My\Test\Ns\Calc
+     */
+    public function testClassNotFound()
+    {
+        $this->cmd->execute(new CommandParams('Calc.php class Calc'), $this->ctx);
+    }
+
+    /**
      * !code File.php method Name\Space\ClassName create.
      */
     public function testStaticMethod()
@@ -114,6 +123,24 @@ CODE;
         $expected = $this->indentText($expected);
         $actual = $this->cmd->execute(new CommandParams('Calc.php method My\Test\Ns\Calc add'), $this->ctx);
         $this->assertSourceCode($expected, $actual);
+    }
+
+    /**
+     * @expectedException \Bigwhoop\Trumpet\Commands\ExecutionFailedException
+     * @expectedExceptionMessage Class 'Calc' was not found in file 'Calc.php'. Available classes: My\Test\Ns\Calc
+     */
+    public function testClassNotFoundForMethod()
+    {
+        $this->cmd->execute(new CommandParams('Calc.php method Calc divide'), $this->ctx);
+    }
+
+    /**
+     * @expectedException \Bigwhoop\Trumpet\Commands\ExecutionFailedException
+     * @expectedExceptionMessage Method 'divide' of class 'My\Test\Ns\Calc' was not found in file 'Calc.php'.
+     */
+    public function testMethodNotFound()
+    {
+        $this->cmd->execute(new CommandParams('Calc.php method My\Test\Ns\Calc divide'), $this->ctx);
     }
 
     /**
