@@ -23,7 +23,7 @@ class Slides implements \IteratorAggregate, \Countable
     {
         $slide = new Slide();
         $this->slides[] = $slide;
-        
+
         return $slide;
     }
 
