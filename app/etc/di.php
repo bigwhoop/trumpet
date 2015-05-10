@@ -107,6 +107,7 @@ $definitions = [
         $handler->registerCommand($c->get('Bigwhoop\Trumpet\Commands\ExecCommand'));
         $handler->registerCommand($c->get('Bigwhoop\Trumpet\Commands\IncludeCommand'));
         $handler->registerCommand($c->get('Bigwhoop\Trumpet\Commands\ImageCommand'));
+        $handler->registerCommand($c->get('Bigwhoop\Trumpet\Commands\WikiCommand'));
 
         return $handler;
     }),

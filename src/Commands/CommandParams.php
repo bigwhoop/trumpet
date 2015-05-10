@@ -44,11 +44,12 @@ class CommandParams
     }
 
     /**
+     * @param null|string $default
      * @return string
      */
-    public function getFirstArgument()
+    public function getFirstArgument($default = null)
     {
-        return $this->getArgument(0);
+        return $this->getArgument(0, $default);
     }
 
     /**
@@ -60,11 +61,12 @@ class CommandParams
     }
 
     /**
+     * @param null|string $default
      * @return string
      */
-    public function getSecondArgument()
+    public function getSecondArgument($default = null)
     {
-        return $this->getArgument(1);
+        return $this->getArgument(1, $default);
     }
 
     /**
@@ -76,11 +78,12 @@ class CommandParams
     }
 
     /**
+     * @param null|string $default
      * @return string
      */
-    public function getThirdArgument()
+    public function getThirdArgument($default = null)
     {
-        return $this->getArgument(2);
+        return $this->getArgument(2, $default);
     }
 
     /**
@@ -109,7 +112,7 @@ class CommandParams
      */
     public function getArguments()
     {
-        return explode($this->argumentSeparator, $this->params);
+        return str_getcsv($this->params, $this->argumentSeparator, '"');
     }
 
     /**
