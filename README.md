@@ -27,6 +27,7 @@ Go to [http://localhost:8075/](http://localhost:8075/).
     - Embedding of text files (HTML, CSS, etc.)
     - Dynamic embedding of PHP code (whole files, classes, methods, functions, lines)
     - Embedding images with automatic resizing, cropping, etc.
+    - Summary Quotes from Wikipedia
     - ...
 - Themeable (using Handlebars)
 
@@ -319,6 +320,25 @@ There you can also include only a certain range of lines.
 
     !include slides.md line 5           # Only the 5th line
     !include slides.md line 9-12        # Lines 9 - 12
+
+### Wikipedia Summary
+
+Shows the summary for a given topic in a blockquote.
+
+Command:
+
+    !wiki TOPIC [NUM_SENTEMCES]
+
+Example:
+
+    !wiki "Theme (computing)"
+
+Output:
+
+    > In computing, a theme is a preset package containing graphical appearance details. A theme
+    > usually comprises a set of shapes and colors for the graphical control elements, the window
+    > decoration and the window. Themes are used to customize the look and feel of a piece of
+    > computer software or of an operating system.
 
 ### Iframe command
 

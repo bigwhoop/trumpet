@@ -150,7 +150,7 @@ class ImageCommand implements Command
         switch ($this->returnType) {
             case self::RETURN_TYPE_URL:
                 case self::RETURN_TYPE_PATH:
-                $tmpDir = $this->ensureTempDirectory();
+                $tmpDir = $this->executionContext->ensureTempDirectory();
                 $tmpFile = $tmpDir.'/'.md5($params->getParams()).'.png';
                 $img->encode('png')->save($tmpFile);
 
@@ -169,18 +169,5 @@ class ImageCommand implements Command
             default:
                 throw new ExecutionFailedException("Invalid return type '{$this->returnType}' detected.");
         }
-    }
-
-    /**
-     * @return string
-     */
-    private function ensureTempDirectory()
-    {
-        $tmpDir = $this->executionContext->getWorkingDirectory().'/_tmp';
-        if (!is_dir($tmpDir)) {
-            mkdir($tmpDir, 0755, true);
-        }
-
-        return $tmpDir;
     }
 }

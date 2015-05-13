@@ -52,11 +52,11 @@ $requestUriParts = array_filter(explode('/', trim(urldecode($_SERVER['REQUEST_UR
 if (!empty($requestUriParts) && $requestUriParts[0] == '?new') {
     $idx = 1;
     do {
-        $newPresentationPath = $cwd . '/Presentation ' . $idx++ . '.trumpet';
+        $newPresentationPath = $cwd.'/Presentation '.$idx++.'.trumpet';
     } while (file_exists($newPresentationPath));
-    
-    copy(__DIR__ . '/etc/Sample.trumpet', $newPresentationPath);
-    
+
+    copy(__DIR__.'/etc/Sample.trumpet', $newPresentationPath);
+
     header('location: /', 302);
     exit();
 }

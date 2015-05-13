@@ -84,4 +84,17 @@ class CommandExecutionContext
 
         return file_get_contents($path);
     }
+
+    /**
+     * @return string
+     */
+    public function ensureTempDirectory()
+    {
+        $tmpDir = $this->getWorkingDirectory().'/.tmp';
+        if (!is_dir($tmpDir)) {
+            mkdir($tmpDir, 0755, true);
+        }
+
+        return $tmpDir;
+    }
 }

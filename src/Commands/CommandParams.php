@@ -45,6 +45,7 @@ class CommandParams
 
     /**
      * @param null|string $default
+     *
      * @return string
      */
     public function getFirstArgument($default = null)
@@ -62,6 +63,7 @@ class CommandParams
 
     /**
      * @param null|string $default
+     *
      * @return string
      */
     public function getSecondArgument($default = null)
@@ -79,6 +81,7 @@ class CommandParams
 
     /**
      * @param null|string $default
+     *
      * @return string
      */
     public function getThirdArgument($default = null)

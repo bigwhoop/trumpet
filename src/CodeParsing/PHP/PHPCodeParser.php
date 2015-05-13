@@ -59,7 +59,7 @@ class PHPCodeParser
 
             return $visitor->getResult();
         } catch (Error $e) {
-            throw new ParserException($e->getMessage(), $e->getCode(), $e);
+            throw new ParserException("Failed to parse PHP file: ".$e->getMessage(), $e->getCode(), $e);
         }
     }
 

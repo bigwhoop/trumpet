@@ -71,7 +71,7 @@ class Slides implements \IteratorAggregate, \Countable
     public function trim()
     {
         if ($this->getCurrentSlide()->isEmpty()) {
-            unset($slides[count($slides) - 1]);
+            unset($this->slides[count($this->slides) - 1]);
         }
     }
 
