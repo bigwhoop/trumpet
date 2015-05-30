@@ -11,20 +11,26 @@
 
 namespace Bigwhoop\Trumpet\Commands;
 
+use Bigwhoop\SentenceBreaker\SentenceBreaker;
+
 class WikiCommand implements Command
 {
     const ENDPOINT = 'https://en.wikipedia.org/w/api.php';
-    const QUOTE_MAX_LENGTH = 400;
 
     /** @var CommandExecutionContext */
     private $executionContext;
+    
+    /** @var SentenceBreaker */
+    private $sentenceBreaker;
 
     /**
      * @param CommandExecutionContext $context
+     * @param SentenceBreaker $sentenceBreaker
      */
-    public function __construct(CommandExecutionContext $context)
+    public function __construct(CommandExecutionContext $context, SentenceBreaker $sentenceBreaker)
     {
         $this->executionContext = $context;
+        $this->sentenceBreaker  = $sentenceBreaker;
     }
 
     /**
@@ -41,13 +47,13 @@ class WikiCommand implements Command
     public function execute(CommandParams $params, CommandExecutionContext $executionContext)
     {
         $article = $params->getFirstArgument();
-        $maxLength = (int) $params->getSecondArgument(self::QUOTE_MAX_LENGTH);
+        $numSentences = (int) $params->getSecondArgument(0);
 
         $cacheFile = $this->getCacheFilePath($article);
         if (is_readable($cacheFile)) {
             $summary = file_get_contents($cacheFile);
 
-            return $this->quote($summary, $maxLength);
+            return $this->quote($summary, $numSentences);
         }
 
         $url = $this->buildURL($article);
@@ -65,7 +71,7 @@ class WikiCommand implements Command
 
             file_put_contents($cacheFile, $page->extract);
 
-            return $this->quote($page->extract, $maxLength);
+            return $this->quote($page->extract, $numSentences);
         }
 
         throw new ExecutionFailedException("Failed to query for Wikipedia article '$article'. Request URL: $url");
@@ -86,15 +92,15 @@ class WikiCommand implements Command
 
     /**
      * @param string $text
-     * @param int    $maxLength
-     * @param string $suffix
+     * @param int    $numSentences
      *
      * @return string
      */
-    private function quote($text, $maxLength, $suffix = ' ...')
+    private function quote($text, $numSentences)
     {
-        if (mb_strlen($text) - mb_strlen($suffix) > $maxLength) {
-            $text = mb_substr($text, 0, $maxLength).$suffix;
+        if ($numSentences > 0) {
+            $sentences = $this->sentenceBreaker->split($text);
+            $text = join(' ', array_slice($sentences, 0, $numSentences));
         }
 
         return "> $text";

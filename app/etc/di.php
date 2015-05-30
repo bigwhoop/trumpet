@@ -69,6 +69,12 @@ $definitions = [
 
         return $presenter;
     }),
+    
+    'Bigwhoop\SentenceBreaker\SentenceBreaker' => DI\object()
+        ->method('addAbbreviations', DI\link('Bigwhoop\SentenceBreaker\Abbreviations\ValueProvider')),
+    
+    'Bigwhoop\SentenceBreaker\Abbreviations\ValueProvider' => DI\object('Bigwhoop\SentenceBreaker\Abbreviations\FlatFileProvider')
+        ->constructor(__DIR__ . '/../../vendor/bigwhoop/sentence-breaker/data', ['all']),
 
     'Handlebars\Handlebars' => DI\factory(function () {
         $hbs = new Handlebars();
@@ -76,6 +82,10 @@ $definitions = [
 
         $hbs->addHelper('urlencode', function (HbsTemplate $template, HbsContext $context, $args, $source) {
             return rawurlencode($context->get($args));
+        });
+        
+        $hbs->addHelper('count', function (HbsTemplate $template, HbsContext $context, $args, $source) {
+            return count($context->get($args));
         });
 
         $hbs->addHelper('join', function (HbsTemplate $template, HbsContext $context, $args, $source) {
