@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "bigwhoop/sentence-breaker",
-            "version": "2.0.0",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bigwhoop/sentence-breaker.git",
-                "reference": "095cec66004750b22c077dde81a08ab1493608e4"
+                "reference": "7b3d72ed84082c512cc0335b6e230f033274ea8d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bigwhoop/sentence-breaker/zipball/095cec66004750b22c077dde81a08ab1493608e4",
-                "reference": "095cec66004750b22c077dde81a08ab1493608e4",
+                "url": "https://api.github.com/repos/bigwhoop/sentence-breaker/zipball/7b3d72ed84082c512cc0335b6e230f033274ea8d",
+                "reference": "7b3d72ed84082c512cc0335b6e230f033274ea8d",
                 "shasum": ""
             },
             "require": {
@@ -44,7 +44,7 @@
                 }
             ],
             "description": "Sentence boundary disambiguation (SBD) - or sentence breaking - library written in PHP.",
-            "time": "2015-05-26 19:49:04"
+            "time": "2015-05-30 22:13:40"
         },
         {
             "name": "container-interop/container-interop",
