@@ -34,21 +34,25 @@ p { line-height: 120%; margin: 10px 0; }
 a { color: #333; }
 pre { font-size: 14px; white-space: pre-wrap; }
 
-#presentations_index .presentations .presentation {
-    float: left;
-    width: 21%;
-    height: 140px;
-    background-color: #ddd;
-    background: linear-gradient(to bottom, #ddd 0%, transparent 50%);
-    border-radius: 5px;
-    margin: 0 2% 20px;
-    overflow: hidden;
+#presentations_index .presentations {
+    display: flex;
+    flex-flow: row wrap;
 }
+
+#presentations_index .presentations .presentation {
+    box-sizing: border-box;
+    width: 33%;
+    padding: 10px;
+    border-left: 5px solid #fff;
+    border-right: 5px solid #fff;  
+    border-bottom: 10px solid #fff;
+    background: #f5f5f5;
+}
+
 #presentations_index .presentations .presentation a {
     display: block;
     text-decoration: none;
     text-align: center;
-    padding: 10px;
 }
 #presentations_index .presentations .presentation i { margin-bottom: 10px; }
 
