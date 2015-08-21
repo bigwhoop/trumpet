@@ -1,5 +1,7 @@
 # Trumpet
 
+**This project is no longer maintained. I recomment using [reveal.js](https://github.com/hakimel/reveal.js).**
+
 The presentation tool for PHP developers.
 
 [![Build Status](https://travis-ci.org/bigwhoop/trumpet.svg?branch=master)](https://travis-ci.org/bigwhoop/trumpet)
