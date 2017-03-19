@@ -1,12 +1,4 @@
-<?php
-/**
- * This file is part of trumpet.
- *
- * (c) Philippe Gerber
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+<?php declare(strict_types=1);
 
 namespace Bigwhoop\Trumpet\Commands;
 
@@ -30,36 +22,23 @@ class ImageCommand implements Command
     /** @var string */
     private $returnType = self::RETURN_TYPE_URL;
 
-    /**
-     * @param ImageManager            $manager
-     * @param CommandExecutionContext $context
-     */
     public function __construct(ImageManager $manager, CommandExecutionContext $context)
     {
         $this->imageManager     = $manager;
         $this->executionContext = $context;
     }
-
-    /**
-     * @param string $type
-     */
-    public function setReturnType($type)
+    
+    public function setReturnType(string $type)
     {
         $this->returnType = $type;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getToken()
+    public function getToken(): string
     {
         return 'image';
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function execute(CommandParams $params, CommandExecutionContext $executionContext)
+    
+    public function execute(CommandParams $params, CommandExecutionContext $executionContext): string
     {
         $fileName = $params->getFirstArgument();
 
@@ -100,27 +79,17 @@ class ImageCommand implements Command
         return $this->returnImage($img, $params);
     }
 
-    /**
-     * @param string $value
-     *
-     * @return int|null
-     */
-    private function filterIntOrNullArgument($value)
+    private function filterIntOrNullArgument(string $value): ?int
     {
-        $value = (int) $value;
-        if ($value < 1) {
-            $value = null;
+        $int = (int) $value;
+        if ($int < 1) {
+            $int = null;
         }
 
-        return $value;
+        return $int;
     }
-
-    /**
-     * @param string $dimension
-     *
-     * @return array
-     */
-    private function parseDimension($dimension)
+    
+    private function parseDimension(string $dimension): array
     {
         $matches = [];
         if (!preg_match('#(\d+)x(\d+)#', $dimension, $matches)) {
@@ -136,22 +105,14 @@ class ImageCommand implements Command
 
         return [$width, $height];
     }
-
-    /**
-     * @param Image         $img
-     * @param CommandParams $params
-     *
-     * @return string
-     *
-     * @throws ExecutionFailedException
-     */
-    private function returnImage(Image $img, CommandParams $params)
+    
+    private function returnImage(Image $img, CommandParams $params): string
     {
         switch ($this->returnType) {
             case self::RETURN_TYPE_URL:
                 case self::RETURN_TYPE_PATH:
                 $tmpDir = $this->executionContext->ensureTempDirectory();
-                $tmpFile = $tmpDir.'/'.md5($params->getParams()).'.png';
+                $tmpFile = $tmpDir.'/'.md5(join("\n", $params->getArguments())).'.png';
                 $img->encode('png')->save($tmpFile);
 
                 if ($this->returnType === self::RETURN_TYPE_PATH) {

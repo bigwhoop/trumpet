@@ -1,42 +1,37 @@
-<?php
+<?php declare(strict_types=1);
 
-/**
- * This file is part of trumpet.
- *
- * (c) Philippe Gerber
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Bigwhoop\Trumpet\CodeParsing\PHP;
+namespace Bigwhoop\Trumpet\CodeParsing\Php;
 
 use Bigwhoop\Trumpet\Exceptions\OutOfBoundsException;
 
-class PHPClass
+final class PhpClass
 {
     use FullyQualifiedNameTrait;
     use SourceTrait;
 
-    /** @var PHPMethod[] */
+    /** @var PhpMethod[] */
     private $methods = [];
 
     /**
      * @param string      $name
-     * @param PHPMethod[] $methods
+     * @param PhpMethod[] $methods
      * @param string      $source
      */
-    public function __construct($name, array $methods = [], $source = '')
+    public function __construct(string $name, array $methods = [], string $source = '')
     {
         $this->name = $name;
-        $this->methods = $methods;
+        $this->addMethods($methods);
         $this->source = $source;
     }
-
-    /**
-     * @param PHPMethod $method
-     */
-    public function addMethod(PHPMethod $method)
+    
+    public function addMethods(array $methods)
+    {
+        foreach ($methods as $method) {
+            $this->addMethod($method);
+        }
+    }
+    
+    public function addMethod(PhpMethod $method)
     {
         $this->methods[$method->getName()] = $method;
     }
@@ -52,7 +47,7 @@ class PHPClass
     }
 
     /**
-     * @return PHPMethod[]
+     * @return PhpMethod[]
      */
     public function getMethods()
     {
@@ -62,7 +57,7 @@ class PHPClass
     /**
      * @param string $name
      *
-     * @return PHPMethod
+     * @return PhpMethod
      *
      * @throws OutOfBoundsException
      */

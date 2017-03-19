@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{title}} | trumpet</title>
+    <title>{{ title }} | trumpet</title>
     
     <link rel="stylesheet" type="text/css" href="/internal/styles.css">
     <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
@@ -10,13 +10,19 @@
 <body>
     <div id="container">
         <div class="header">
+            <div class="pull-right">
+                <a href="/?new" class="new-presentation">
+                    <i class="fa fa-plus-circle"></i>
+                    Create New Presentation 
+                </a>
+            </div>
             <a href="/">
                 <img src="/internal/elephant.svg" width="36">
                 trumpet
             </a>
         </div>
         <div class="body">
-            {{{content}}}
+            {{ block('content') }}
         </div>
     </div>
 </body>

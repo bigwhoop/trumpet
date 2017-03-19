@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Trumpet;
 
@@ -6,58 +6,39 @@ use Bigwhoop\Trumpet\Config\Config;
 use Bigwhoop\Trumpet\Presentation\Presenter;
 use Bigwhoop\Trumpet\Presentation\Theming\Theme;
 use Bigwhoop\Trumpet\Presentation\Theming\ThemeException;
-use DI\Container as DIC;
-use Handlebars\Handlebars;
+use Interop\Container\ContainerInterface as Container;
 
-if (php_sapi_name() !== 'cli-server') {
+if (PHP_SAPI !== 'cli-server') {
     exit("This file should only be run with PHP's built-in web server.");
 }
 
-error_reporting(E_ALL);
-ini_set('display_errors', true);
-ini_set('display_startup_errors', true);
+/** @var Container $container */
+$container = require __DIR__ . '/../bootstrap.php';
 
-require __DIR__.'/../vendor/autoload.php';
+$twig = new \Twig_Environment(new \Twig_Loader_Filesystem(__DIR__ . '/templates'));
 
-/** @var DIC $dic */
-$dic = require __DIR__.'/etc/di.php';
-
-set_error_handler($dic->get('ErrorHandler'));
-
-/** @var Handlebars $handlebars */
-$handlebars = $dic->get('Handlebars\Handlebars');
-
-/**
- * @param int $httpStatusCode
- * @param string $view
- * @param array $data
- */
-function renderInternalViewAndSendResponse($httpStatusCode, $view, array $data = [])
-{
-    global $handlebars;
-
-    $data['content'] = $handlebars->render(file_get_contents(__DIR__.'/templates/'.$view.'.hbs'), $data);
-    $response = $handlebars->render(file_get_contents(__DIR__.'/templates/layout.hbs'), $data);
+$renderTemplateAndSendResponse = function (int $httpStatusCode, string $view, array $data = []) use ($twig) {
+    $response = $twig->render($view.'.html.twig', $data);
 
     http_response_code($httpStatusCode);
     echo $response;
     exit();
-}
+};
 
 $cwd = getcwd();
 $requestUriParts = array_filter(explode('/', trim(urldecode($_SERVER['REQUEST_URI']), '/')), function ($e) {
     return !empty($e);
 });
 
-if (!empty($requestUriParts) && $requestUriParts[0] == '?new') {
+if (!empty($requestUriParts) && $requestUriParts[0] === '?new') {
     $idx = 1;
     do {
         $newPresentationPath = $cwd.'/Presentation '.$idx++.'.trumpet';
     } while (file_exists($newPresentationPath));
 
-    copy(__DIR__.'/etc/Sample.trumpet', $newPresentationPath);
+    copy(__DIR__ . '/example/Presentation.trumpet', $newPresentationPath);
 
-    header('location: /', 302);
+    header('location: /', true, 302);
     exit();
 }
 
@@ -75,7 +56,7 @@ if (!empty($requestUriParts) && $requestUriParts[0] === 'internal') {
             case 'css': $contentType = 'text/css'; break;
             case 'svg': $contentType = 'image/svg+xml'; break;
             default:
-                renderInternalViewAndSendResponse(500, '500', [
+                $renderTemplateAndSendResponse(500, '500', [
                     'title' => 'File Not Found',
                     'message' => "Content type for extension of file '$internalPath' was not defined.",
                 ]);
@@ -87,17 +68,9 @@ if (!empty($requestUriParts) && $requestUriParts[0] === 'internal') {
         exit();
     }
 
-    renderInternalViewAndSendResponse(404, '404', [
+    $renderTemplateAndSendResponse(404, '404', [
         'title' => 'File Not Found',
         'message' => 'Trumpet web asset not found.',
-    ]);
-}
-
-// No files
-if (empty($trumpetFiles)) {
-    renderInternalViewAndSendResponse(404, '404', [
-        'title' => 'No *.trumpet Files Found',
-        'message' => "No *.trumpet files were found in $cwd. You should create some and reload the page.",
     ]);
 }
 
@@ -118,9 +91,10 @@ if (empty($requestUriParts)) {
             'size'  => filesize($trumpetFile),
         ];
     }
-    renderInternalViewAndSendResponse(200, 'presentations-index', [
+    $renderTemplateAndSendResponse(200, 'presentations-index', [
         'title' => 'Presentations',
         'presentations' => $presentations,
+        'cwd' => $cwd,
     ]);
 }
 
@@ -130,18 +104,18 @@ if (array_key_exists('/'.$requestUriParts[0].'/', $trumpetFiles)) {
 
     try {
         /** @var Config $config */
-        $config = $dic->get('Bigwhoop\Trumpet\Config\Config');
+        $config = $container->get(Config::class);
 
         $presentation = $config->readTrumpetFile($trumpetFile);
 
         /** @var Presenter $presenter */
-        $presenter = $dic->get('Bigwhoop\Trumpet\Presentation\Presenter');
+        $presenter = $container->get(Presenter::class);
 
         http_response_code(200);
         echo $presenter->present($presentation);
         exit();
     } catch (\Exception $e) {
-        renderInternalViewAndSendResponse(500, '500', [
+        $renderTemplateAndSendResponse(500, '500', [
             'title' => 'Internal Server Error',
             'message' => $e->getMessage(),
             'file' => $e->getFile(),
@@ -159,7 +133,7 @@ if (file_exists($cwd.'/'.$assetPath)) {
 
 // Theme asset
 /** @var Theme $theme */
-$theme = $dic->get('Bigwhoop\Trumpet\Presentation\Theming\Theme');
+$theme = $container->get(Theme::class);
 try {
     $asset = $theme->getAsset($assetPath);
 
@@ -168,7 +142,7 @@ try {
     echo $asset->content;
     exit();
 } catch (ThemeException $e) {
-    renderInternalViewAndSendResponse(404, '404', [
+    $renderTemplateAndSendResponse(404, '404', [
         'title' => 'File Not Found',
         'message' => $e->getMessage(),
     ]);

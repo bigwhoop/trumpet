@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Bigwhoop\Trumpet\Tests\Config\Params;
 
@@ -46,7 +46,7 @@ class DateParamTest extends TestCase
      * @expectedException \Bigwhoop\Trumpet\Config\ConfigException
      * @expectedExceptionMessage Dates must be a string in the format YYYY-MM-DD.
      */
-    public function testInvalidDateFormat($date)
+    public function testInvalidDateFormat(string $date)
     {
         $this->param->parse($date, new Presentation());
     }

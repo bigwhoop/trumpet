@@ -1,0 +1,21 @@
+{% extends "layout.html.twig" %}
+
+{% block content %}
+    <div id="presentations_index">
+        <h1>Select your presentation ({{ presentations | length }})</h1>
+        
+        <div class="presentations">
+            {% for presentation in presentations %}
+                <div class="presentation">
+                    <a href="{{ presentation.url }}">
+                        <i class="fa fa-file-powerpoint-o fa-3x"></i><br>
+                        {{ presentation.title }}
+                    </a>
+                </div>
+            {% else %}
+                <p>No *.trumpet files were found in <code>{{ cwd }}</code>. You should create some and reload the page.</p>
+            {% endfor %}
+        </div>
+        <div class="clearfix"></div>
+    </div>
+{% endblock %}

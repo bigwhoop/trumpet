@@ -1,17 +1,8 @@
-<?php
-
-/**
- * This file is part of trumpet.
- *
- * (c) Philippe Gerber
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+<?php declare(strict_types=1);
 
 namespace Bigwhoop\Trumpet\Config;
 
-class Slides implements \IteratorAggregate, \Countable
+final class Slides implements \IteratorAggregate, \Countable
 {
     /** @var Slide[] */
     private $slides = [];
@@ -35,10 +26,7 @@ class Slides implements \IteratorAggregate, \Countable
         $this->slides[] = $slide;
     }
 
-    /**
-     * @param string $content
-     */
-    public function addContentToNewSlide($content)
+    public function addContentToNewSlide(string $content)
     {
         $slide = $this->getCurrentSlide();
         if (!$slide->isEmpty()) {
@@ -47,19 +35,13 @@ class Slides implements \IteratorAggregate, \Countable
 
         $slide->addLine($content);
     }
-
-    /**
-     * @param string $content
-     */
-    public function addContentToCurrentSlide($content)
+    
+    public function addContentToCurrentSlide(string $content)
     {
         $this->getCurrentSlide()->addLine($content);
     }
 
-    /**
-     * @return Slide
-     */
-    private function getCurrentSlide()
+    private function getCurrentSlide(): Slide
     {
         if (empty($this->slides)) {
             $this->addBlankSlide();
@@ -74,27 +56,18 @@ class Slides implements \IteratorAggregate, \Countable
             unset($this->slides[count($this->slides) - 1]);
         }
     }
-
-    /**
-     * @return Slide[]
-     */
-    public function getAll()
+    
+    public function getAll(): array
     {
         return $this->slides;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getIterator()
+    public function getIterator(): \Iterator
     {
         return new \ArrayIterator($this->slides);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function count()
+    public function count(): int
     {
         return count($this->slides);
     }

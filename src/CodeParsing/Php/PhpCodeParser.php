@@ -1,15 +1,6 @@
-<?php
+<?php declare(strict_types=1);
 
-/**
- * This file is part of trumpet.
- *
- * (c) Philippe Gerber
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Bigwhoop\Trumpet\CodeParsing\PHP;
+namespace Bigwhoop\Trumpet\CodeParsing\Php;
 
 use Bigwhoop\Trumpet\CodeParsing\ParserException;
 use PhpParser\Error;
@@ -17,7 +8,7 @@ use PhpParser\ParserAbstract as Parser;
 use PhpParser\NodeTraverserInterface as NodeTraverser;
 use PhpParser\PrettyPrinterAbstract as Printer;
 
-class PHPCodeParser
+final class PhpCodeParser
 {
     /** @var Parser */
     private $parser;
@@ -28,11 +19,6 @@ class PHPCodeParser
     /** @var Printer */
     private $printer;
 
-    /**
-     * @param Parser        $parser
-     * @param NodeTraverser $nodeTraverser
-     * @param Printer       $printer
-     */
     public function __construct(Parser $parser, NodeTraverser $nodeTraverser, Printer $printer)
     {
         $this->parser = $parser;
@@ -40,14 +26,7 @@ class PHPCodeParser
         $this->printer = $printer;
     }
 
-    /**
-     * @param string $code
-     *
-     * @return ParserResult
-     *
-     * @throws ParserException
-     */
-    public function parse($code)
+    public function parse(string $code): ParserResult
     {
         try {
             $stmts = $this->parser->parse($code);
@@ -62,11 +41,8 @@ class PHPCodeParser
             throw new ParserException("Failed to parse PHP file: ".$e->getMessage(), $e->getCode(), $e);
         }
     }
-
-    /**
-     * @return NodeVisitor
-     */
-    private function createVisitor()
+    
+    private function createVisitor(): NodeVisitor
     {
         return new NodeVisitor($this->printer);
     }

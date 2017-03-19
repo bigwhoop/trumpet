@@ -1,33 +1,31 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Bigwhoop\Trumpet\Tests;
 
-class TestCase extends \PHPUnit_Framework_TestCase
+use DI\Container;
+use PHPUnit\Framework\TestCase as BaseTestCase;
+
+class TestCase extends BaseTestCase
 {
+    /** @var Container */
+    private static $container;
+    
+    public static function setContainer(Container $container)
+    {
+        self::$container = $container;
+    }
+    
     public function setUp()
     {
-        /** @var \DI\Container $container */
-        $container = require __DIR__.'/../../app/etc/di.php';
-        $container->set('WorkingDirectory', __DIR__.'/../assets');
-        $container->injectOn($this);
+        self::$container->injectOn($this);
     }
 
-    /**
-     * @param string $expected
-     * @param string $actual
-     */
-    protected function assertSourceCode($expected, $actual)
+    protected function assertSourceCode(string $expected, string $actual)
     {
         $this->assertEquals(str_replace("\r", '', $expected), str_replace("\r", '', $actual));
     }
 
-    /**
-     * @param string $text
-     * @param string $indent
-     *
-     * @return string
-     */
-    protected function indentText($text, $indent = '    ')
+    protected function indentText(string $text, string $indent = '    '): string
     {
         $lines = explode("\n", str_replace("\r", '', $text));
         $lines = array_map(function ($line) use ($indent) {

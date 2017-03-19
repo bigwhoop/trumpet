@@ -1,13 +1,4 @@
-<?php
-
-/**
- * This file is part of trumpet.
- *
- * (c) Philippe Gerber
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+<?php declare(strict_types=1);
 
 namespace Bigwhoop\Trumpet\Config;
 
@@ -15,29 +6,17 @@ use Bigwhoop\Trumpet\Config\Params\Param;
 use Bigwhoop\Trumpet\Exceptions\InvalidArgumentException;
 use Symfony\Component\Yaml\Yaml;
 
-class Config
+final class Config
 {
     /** @var Param[] */
     private $params = [];
 
-    /**
-     * @param string $name
-     * @param Param  $param
-     */
-    public function setParam($name, Param $param)
+    public function setParam(string $name, Param $param)
     {
         $this->params[$name] = $param;
     }
-
-    /**
-     * @param string $path
-     *
-     * @return Presentation
-     *
-     * @throws ConfigException
-     * @throws InvalidArgumentException
-     */
-    public function readTrumpetFile($path)
+    
+    public function readTrumpetFile(string $path): Presentation
     {
         if (!is_readable($path)) {
             throw new InvalidArgumentException("Trumpet file '$path' must exist and be readable.");
@@ -47,8 +26,8 @@ class Config
 
         try {
             $data = Yaml::parse($yaml, true, true);
-        } catch (\Exception $e) {
-            throw new ConfigException($e->getMessage(), 0, $e);
+        } catch (\Throwable $t) {
+            throw new ConfigException($t->getMessage(), 0, $t);
         }
 
         if (!is_array($data)) {

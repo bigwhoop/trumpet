@@ -1,0 +1,11 @@
+{% extends "layout.html.twig" %}
+
+{% block content %}
+    <h1>Oh me, oh my. Something went wrong.</h1>
+    
+    <p><strong>Error</strong>: {{ message }}</p>
+    <p><strong>File</strong>: {{ file }}</p>
+    <p><strong>Line</strong>: {{ line }}</p>
+    
+    <pre>{{ trace }}</pre>
+{% endblock %}

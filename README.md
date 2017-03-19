@@ -1,7 +1,5 @@
 # Trumpet
 
-**This project is no longer maintained. I recomment using [reveal.js](https://github.com/hakimel/reveal.js).**
-
 The presentation tool for PHP developers.
 
 [![Build Status](https://travis-ci.org/bigwhoop/trumpet.svg?branch=master)](https://travis-ci.org/bigwhoop/trumpet)
@@ -11,12 +9,11 @@ The presentation tool for PHP developers.
 
 ## Quick Guide
 
-    composer create-project --no-dev --no-interaction "bigwhoop/trumpet":"dev-master"
-    git clone https://github.com/bigwhoop/trumpet-default-theme.git theme
-    php trumpet\bin\trumpet
+    composer global require bigwhoop/trumpet
+    mkdir ~/Presentations && cd ~/Presentations
+    trumpet
     
 Go to [http://localhost:8075/](http://localhost:8075/).
-
 
 
 ## Features
@@ -31,30 +28,14 @@ Go to [http://localhost:8075/](http://localhost:8075/).
     - Embedding images with automatic resizing, cropping, etc.
     - Summary Quotes from Wikipedia
     - ...
-- Themeable (using Handlebars)
+- Themeable (using Twig)
 
 ## Installation
 
-    composer global require "bigwhoop/trumpet":"~1.0"
+    composer global require bigwhoop/trumpet
 
 Make sure that the `~/.composer/vendor/bin` folder is in your `PATH` environment variable.
 This [blog post](http://akrabat.com/global-installation-of-php-tools-with-composer/) should help you.
-
-### Workspace
-
-It's recommended to create a new folder for all your presentations.
-
-    mkdir ~/presentations
-    cd ~/presentations
-
-### Theme
-
-You'll need a theme to view presentations. Just grab the default theme for now.
-
-    git clone https://github.com/bigwhoop/trumpet-default-theme.git theme
-
-The theme must be located in a subfolder `theme` inside the folder you store your presentations. So for example
-`~/presentations/theme`.
 
 ## Usage
 
@@ -69,12 +50,23 @@ to start it. You should see something like this:
 
 So fire up your browser and head over to [http://localhost:8075/](http://localhost:8075/).
 
+**Trumpet always uses the directory from where it is started to locate presentations.**
 
+### Workspaces
+
+It's recommended to create a new folder for all your presentations.
+
+    mkdir ~/Presentations
+    cd ~/Presentations
+
+#### Themes
+
+You can download or create custom themes. Trumpet will look for a `.theme` directory in the current working directory.
 
 
 ## Presentations
 
-Trumpet presentations are stored in `.trumpet` files. Here's an example:
+Trumpet presentations are stored in files with a `.trumpet` extension. Here's an example:
 
     title: Our test presentation
     subtitle: An optional sub-title
@@ -323,7 +315,7 @@ There you can also include only a certain range of lines.
     !include slides.md line 5           # Only the 5th line
     !include slides.md line 9-12        # Lines 9 - 12
 
-### Wikipedia Summary
+## Wikipedia Summary
 
 Shows the summary for a given topic in a blockquote.
 
@@ -341,7 +333,3 @@ Output:
     > usually comprises a set of shapes and colors for the graphical control elements, the window
     > decoration and the window. Themes are used to customize the look and feel of a piece of
     > computer software or of an operating system.
-
-### Iframe command
-
-*Coming soon*

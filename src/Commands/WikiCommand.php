@@ -1,19 +1,10 @@
-<?php
-
-/**
- * This file is part of trumpet.
- *
- * (c) Philippe Gerber
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+<?php declare(strict_types=1);
 
 namespace Bigwhoop\Trumpet\Commands;
 
 use Bigwhoop\SentenceBreaker\SentenceBreaker;
 
-class WikiCommand implements Command
+final class WikiCommand implements Command
 {
     const ENDPOINT = 'https://en.wikipedia.org/w/api.php';
 
@@ -23,28 +14,18 @@ class WikiCommand implements Command
     /** @var SentenceBreaker */
     private $sentenceBreaker;
 
-    /**
-     * @param CommandExecutionContext $context
-     * @param SentenceBreaker $sentenceBreaker
-     */
     public function __construct(CommandExecutionContext $context, SentenceBreaker $sentenceBreaker)
     {
         $this->executionContext = $context;
         $this->sentenceBreaker  = $sentenceBreaker;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getToken()
+    public function getToken(): string
     {
         return 'wiki';
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function execute(CommandParams $params, CommandExecutionContext $executionContext)
+    
+    public function execute(CommandParams $params, CommandExecutionContext $executionContext): string
     {
         $article = $params->getFirstArgument();
         $numSentences = (int) $params->getSecondArgument(0);
@@ -76,27 +57,15 @@ class WikiCommand implements Command
 
         throw new ExecutionFailedException("Failed to query for Wikipedia article '$article'. Request URL: $url");
     }
-
-    /**
-     * @param string $article
-     *
-     * @return string
-     */
-    private function getCacheFilePath($article)
+    
+    private function getCacheFilePath(string $article): string
     {
         $tmpDir = $this->executionContext->ensureTempDirectory();
-        $tmpFile = $tmpDir.'/summary-'.md5($article).'.txt';
-
-        return $tmpFile;
+        
+        return $tmpDir.'/summary-'.md5($article).'.txt';
     }
-
-    /**
-     * @param string $text
-     * @param int    $numSentences
-     *
-     * @return string
-     */
-    private function quote($text, $numSentences)
+    
+    private function quote(string $text, int $numSentences): string
     {
         if ($numSentences > 0) {
             $sentences = $this->sentenceBreaker->split($text);
@@ -105,13 +74,8 @@ class WikiCommand implements Command
 
         return "> $text";
     }
-
-    /**
-     * @param string $article
-     *
-     * @return string
-     */
-    private function buildURL($article)
+    
+    private function buildURL(string $article): string
     {
         $params = [
             'format'      => 'json',

@@ -1,129 +1,60 @@
-<?php
-
-/**
- * This file is part of trumpet.
- *
- * (c) Philippe Gerber
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+<?php declare(strict_types=1);
 
 namespace Bigwhoop\Trumpet\Commands;
 
-class CommandParams
+final class CommandParams
 {
-    /** @var string */
-    private $argumentSeparator = ' ';
+    /** @var string[] */
+    private $params = [];
 
-    /** @var string */
-    private $params = '';
-
-    /**
-     * @param string $params
-     */
-    public function __construct($params = '')
+    public function __construct(string $params = '', string $argumentSeparator = ' ')
     {
-        $this->params = $params;
+        $this->params = str_getcsv($params, $argumentSeparator, '"');
     }
 
-    /**
-     * @param string $separator
-     */
-    public function setArgumentSeparator($separator)
-    {
-        $this->argumentSeparator = $separator;
-    }
-
-    /**
-     * @return string
-     */
-    public function getParams()
-    {
-        return $this->params;
-    }
-
-    /**
-     * @param null|string $default
-     *
-     * @return string
-     */
-    public function getFirstArgument($default = null)
+    public function getFirstArgument(string $default = ''): string
     {
         return $this->getArgument(0, $default);
     }
 
-    /**
-     * @return bool
-     */
-    public function hasFirstArgument()
+    public function hasFirstArgument(): bool
     {
         return $this->hasArgument(0);
     }
-
-    /**
-     * @param null|string $default
-     *
-     * @return string
-     */
-    public function getSecondArgument($default = null)
+    
+    public function getSecondArgument(string $default = ''): string
     {
         return $this->getArgument(1, $default);
     }
 
-    /**
-     * @return bool
-     */
-    public function hasSecondArgument()
+    public function hasSecondArgument(): bool
     {
         return $this->hasArgument(1);
     }
 
-    /**
-     * @param null|string $default
-     *
-     * @return string
-     */
-    public function getThirdArgument($default = null)
+    public function getThirdArgument(string $default = ''): string
     {
         return $this->getArgument(2, $default);
     }
 
-    /**
-     * @return bool
-     */
-    public function hasThirdArgument()
+    public function hasThirdArgument(): bool
     {
         return $this->hasArgument(2);
     }
 
-    /**
-     * @param int         $n
-     * @param null|string $default
-     *
-     * @return string
-     */
-    public function getArgument($n, $default = null)
+    public function getArgument(int $n, string $default = ''): string
     {
         $args = $this->getArguments();
 
         return array_key_exists($n, $args) ? $args[$n] : $default;
     }
-
-    /**
-     * @return array
-     */
-    public function getArguments()
+    
+    public function getArguments(): array
     {
-        return str_getcsv($this->params, $this->argumentSeparator, '"');
+        return $this->params;
     }
-
-    /**
-     * @param int $n
-     *
-     * @return bool
-     */
-    public function hasArgument($n)
+    
+    public function hasArgument(int $n): bool
     {
         return array_key_exists($n, $this->getArguments());
     }

@@ -1,13 +1,4 @@
-<?php
-
-/**
- * This file is part of trumpet.
- *
- * (c) Philippe Gerber
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+<?php declare(strict_types=1);
 
 namespace Bigwhoop\Trumpet\Presentation\SlideRendering;
 
@@ -16,7 +7,7 @@ use Bigwhoop\Trumpet\Commands\CommandHandler;
 use Bigwhoop\Trumpet\Commands\CommandParams;
 use Bigwhoop\Trumpet\Config\Slide;
 
-class CommandsRenderer implements SlideRenderer
+final class CommandsRenderer implements SlideRenderer
 {
     const COMMAND_PREFIX = '!';
 
@@ -26,20 +17,13 @@ class CommandsRenderer implements SlideRenderer
     /** @var CommandExecutionContext */
     private $executionContext;
 
-    /**
-     * @param CommandHandler          $handler
-     * @param CommandExecutionContext $executionContext
-     */
     public function __construct(CommandHandler $handler, CommandExecutionContext $executionContext)
     {
         $this->commandHandler = $handler;
         $this->executionContext = $executionContext;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function render(Slide $slide)
+    
+    public function render(Slide $slide): string
     {
         $lines = explode("\n", str_replace("\r", '', $slide->content));
 

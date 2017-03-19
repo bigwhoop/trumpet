@@ -1,13 +1,4 @@
-<?php
-
-/**
- * This file is part of trumpet.
- *
- * (c) Philippe Gerber
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+<?php declare(strict_types=1);
 
 namespace Bigwhoop\Trumpet\Presentation;
 
@@ -17,47 +8,31 @@ use Bigwhoop\Trumpet\Presentation\SlideRendering\SlideRenderer;
 use Bigwhoop\Trumpet\Presentation\Theming\Theme;
 use Handlebars\Handlebars;
 
-class HandlebarsPresenter implements Presenter
+final class ThemePresenter implements Presenter
 {
     /** @var Theme */
     private $theme;
 
-    /** @var Handlebars */
-    private $hbs;
-
     /** @var SlideRenderer[] */
     private $slideRenderers = [];
-
-    /**
-     * @param Theme      $theme
-     * @param Handlebars $hbs
-     */
-    public function __construct(Theme $theme, Handlebars $hbs)
+    
+    public function __construct(Theme $theme)
     {
         $this->theme = $theme;
-        $this->hbs = $hbs;
     }
-
-    /**
-     * {@inheritdoc}
-     */
+    
     public function addSlideRenderer(SlideRenderer $slideRenderer)
     {
         $this->slideRenderers[] = $slideRenderer;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function present(Presentation $presentation)
+    
+    public function present(Presentation $presentation): string
     {
-        $layout = $this->theme->getLayout();
-
         foreach ($presentation->slides as $slide) {
             $this->renderSlide($slide);
         }
 
-        $out = $this->hbs->render($layout, [
+        return $this->theme->render([
             'title'          => $presentation->title,
             'subtitle'       => $presentation->subtitle,
             'date'           => $presentation->date->toString(),
@@ -66,16 +41,9 @@ class HandlebarsPresenter implements Presenter
             'theme_settings' => $presentation->themeSettings,
             'slides'         => $presentation->slides->getAll(),
         ]);
-
-        return $out;
     }
-
-    /**
-     * @param Slide $slide
-     *
-     * @return Slide
-     */
-    private function renderSlide(Slide $slide)
+    
+    private function renderSlide(Slide $slide): Slide
     {
         foreach ($this->slideRenderers as $renderer) {
             $slide->content = $renderer->render($slide);

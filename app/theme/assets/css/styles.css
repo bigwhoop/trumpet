@@ -1,0 +1,302 @@
+@media screen {
+    * {
+        margin     : 0;
+        padding    : 0;
+        outline    : none;
+        box-sizing : border-box;
+    }
+
+    html {
+        height : 100%;
+    }
+
+    body {
+        height                 : 100%;
+        min-height             : 740px;
+        overflow-x             : hidden;
+        overflow-y             : auto;
+        background             : rgb(215, 215, 215);
+        background: radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
+    }
+
+    .slides {
+        position          : absolute;
+        left              : 0;
+        top               : 0;
+        width             : 100%;
+        height            : 100%;
+    }
+
+    .slides > article {
+        display          : none;
+        position         : absolute;
+        overflow         : hidden;
+        width            : 88%;
+        min-width        : 900px;
+        height           : 92%;
+        min-height       : 700px;
+        top              : 4%;
+        left             : 6%;
+        padding          : 40px 60px;
+        box-sizing       : border-box;
+        border-radius    : 10px;
+        background-color : white;
+        border           : 1px solid rgba(0, 0, 0, .3);
+        transition       : transform .3s ease-out;
+    }
+
+    .slides > article:first-of-type {
+        background      : url('/img/bg.jpg') no-repeat center;
+        background-size : cover;
+    }
+
+    .slide-area {
+        z-index             : 1000;
+        position            : absolute;
+        top                 : 4%;
+        width               : 8%;
+        height              : 92%;
+        cursor              : pointer;
+    }
+
+    #prev-slide-area {
+        left : 0;
+    }
+
+    #next-slide-area {
+        right : 0;
+    }
+
+    .slides > article.past {
+        display   : block;
+        transform : translate(-102%);
+    }
+
+    .slides > article.current {
+        display : block;
+    }
+
+    .slides > article.next {
+        display   : block;
+        transform : translate(102%);
+    }
+}
+
+.slides > article {
+    font-family    : 'Open Sans', Arial, sans-serif;
+    color          : #111;
+    text-shadow    : 0 1px 1px rgba(0, 0, 0, .1);
+    font-size      : 1.8vw;
+    line-height    : 120%;
+    letter-spacing : -0.1vw;
+}
+
+.slides > article:first-of-type {
+    color       : white;
+    text-shadow : 0 1px #333, 1px 0 #111;
+}
+
+.slides > article:first-of-type h1 {
+    font-size      : 6vw;
+    line-height    : 100%;
+    margin         : 250px 0 1.2vw 0;
+    font-weight    : 600;
+    letter-spacing : -0.4vw;
+    color          : white;
+    text-shadow    : 0 1px #333, 1px 0 #111, 1px 2px #333, 2px 1px #111;
+}
+
+.slides > article:first-of-type h2 {
+    font-size      : 4vw;
+    line-height    : 100%;
+    letter-spacing : -0.3vw;
+    font-weight    : 400;
+    color          : white;
+    text-shadow    : 0 1px #333, 1px 0 #111, 1px 2px #333, 2px 1px #111;
+}
+
+.date {
+    margin-top : 4vw;
+}
+
+.presenters {
+    position : absolute;
+    width    : 100%;
+    bottom   : 40px;
+}
+
+.presenters .presenter {
+    float : left;
+    width : 33%;
+}
+
+.presenters .presenter p {
+    margin        : 0;
+    white-space   : nowrap;
+    overflow      : hidden;
+    text-overflow : ellipsis;
+}
+
+.presenters .presenter p a {
+    color : white;
+}
+
+.presenters .presenter p.name {
+    font-weight : 600;
+}
+
+.presenters .presenter p.company {
+    font-style    : italic;
+    margin-bottom : 1vw;
+}
+
+.presenters .presenter .contact-info {
+    font-size   : 1.5vw;
+    line-height : 130%;
+}
+
+h1 {
+    font-size      : 5vw;
+    line-height    : 100%;
+    margin-top     : 10vw;
+    font-weight    : 600;
+    letter-spacing : -0.3vw;
+    color          : rgb(51, 51, 51);
+}
+
+h2 {
+    font-size      : 3vw;
+    line-height    : 110%;
+    margin         : 0 0 2vw 0;
+    font-weight    : 600;
+    letter-spacing : -0.2vw;
+    color          : rgb(51, 51, 51);
+}
+
+h3 {
+    font-size      : 2vw;
+    line-height    : 120%;
+    margin         : 2vw 0 1vw 0;
+    font-weight    : 600;
+    letter-spacing : -0.1vw;
+    color          : rgb(51, 51, 51);
+}
+
+h4 {
+    font-size   : 1.5vw;
+    line-height : 120%;
+    margin      : 1.5vw 0 1vw 0;
+    font-weight : 600;
+    color       : rgb(51, 51, 51);
+}
+
+b {
+    font-weight : 600;
+}
+
+a {
+    color           : rgb(0, 102, 204);
+    text-decoration : none;
+}
+
+p, ul {
+    margin : .8vw 0;
+}
+
+ul ul {
+    margin-top    : 0;
+    margin-bottom : 0;
+}
+
+p:first-child {
+    margin-top : 0;
+}
+
+ul {
+    margin-left : 3vw;
+}
+
+img {
+    outline   : none;
+    max-width : 100%;
+    overflow  : hidden;
+    width     : auto;
+    height    : auto;
+}
+
+pre, code {
+    font-family : "Source Code Pro", Monaco, monospace;
+}
+
+pre {
+    font-size      : 1.7vw;
+    line-height    : 120%;
+    letter-spacing : -0.1vw;
+    color          : #111;
+    margin         : 1.5vw 0 1.5vw 2vw;
+    padding-left   : 1vw;
+    border-left    : .5vw solid #aaa;
+}
+
+code {
+    color : #111;
+}
+
+article > .image {
+    text-align : center;
+    margin-top : 40px;
+}
+
+table {
+    width           : 100%;
+    border-collapse : collapse;
+    margin-top      : 40px;
+    letter-spacing  : 1em;
+    font-size       : .8em;
+}
+
+th {
+    font-weight : 600;
+    text-align  : left;
+}
+
+td,
+th {
+    border         : 1px solid rgb(224, 224, 224);
+    padding        : 5px 10px;
+    vertical-align : top;
+}
+
+p.link {
+    margin-left : 20px;
+}
+
+iframe {
+    border : none;
+}
+
+figcaption {
+    color      : #666;
+    text-align : center;
+    font-size  : 0.75em;
+}
+
+#help {
+    text-align            : center;
+    color                 : white;
+    background            : #000;
+    opacity               : 0.5;
+    position              : fixed;
+    bottom                : 25px;
+    left                  : 50px;
+    right                 : 50px;
+    padding               : 20px;
+    border-radius         : 10px;
+}
+
+blockquote {
+    margin       : 1.5vw 0 1.5vw 2vw;
+    padding-left : 1vw;
+    border-left  : .5vw solid #aaa;
+    font-size    : .75em;
+}

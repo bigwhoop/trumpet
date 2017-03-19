@@ -1,30 +1,16 @@
-<?php
+<?php declare(strict_types=1);
 
-/**
- * This file is part of trumpet.
- *
- * (c) Philippe Gerber
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 
 namespace Bigwhoop\Trumpet\Commands;
 
 class IncludeCommand implements Command
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getToken()
+    public function getToken(): string
     {
         return 'include';
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function execute(CommandParams $params, CommandExecutionContext $executionContext)
+    public function execute(CommandParams $params, CommandExecutionContext $executionContext): string
     {
         $fileName = $params->getFirstArgument();
 

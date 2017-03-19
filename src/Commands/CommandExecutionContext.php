@@ -1,81 +1,45 @@
-<?php
-
-/**
- * This file is part of trumpet.
- *
- * (c) Philippe Gerber
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+<?php declare(strict_types=1);
 
 namespace Bigwhoop\Trumpet\Commands;
 
 use Bigwhoop\Trumpet\Exceptions\InvalidArgumentException;
 use Bigwhoop\Trumpet\Presentation\Theming\Theme;
 
-class CommandExecutionContext
+final class CommandExecutionContext
 {
     /** @var Theme */
     private $theme;
 
     /** @var string */
     private $workingDir = '';
-
-    /**
-     * @Inject({"Bigwhoop\Trumpet\Presentation\Theming\Theme","WorkingDirectory"})
-     *
-     * @param Theme  $theme
-     * @param string $workingDirectory
-     */
-    public function __construct(Theme $theme, $workingDirectory)
+    
+    public function __construct(Theme $theme, string $workingDirectory)
     {
         $this->theme = $theme;
         $this->workingDir = $workingDirectory;
     }
-
-    /**
-     * @return Theme
-     */
-    public function getTheme()
+    
+    public function getTheme(): Theme
     {
         return $this->theme;
     }
 
-    /**
-     * @return string
-     */
-    public function getWorkingDirectory()
+    public function getWorkingDirectory(): string
     {
         return $this->workingDir;
     }
 
-    /**
-     * @param string $file
-     *
-     * @return bool
-     */
-    public function hasFileInWorkingDirectory($file)
+    public function hasFileInWorkingDirectory(string $file): bool
     {
         return file_exists($this->workingDir.'/'.$file);
     }
 
-    /**
-     * @param string $file
-     *
-     * @return string
-     */
-    public function getPathOfFileInWorkingDirectory($file)
+    public function getPathOfFileInWorkingDirectory(string $file): string
     {
         return $this->workingDir.'/'.$file;
     }
 
-    /**
-     * @param string $file
-     *
-     * @return string
-     */
-    public function getContentsOfFileInWorkingDirectory($file)
+    public function getContentsOfFileInWorkingDirectory(string $file): string
     {
         $path = $this->workingDir.'/'.$file;
         if (!is_readable($path)) {
@@ -85,10 +49,7 @@ class CommandExecutionContext
         return file_get_contents($path);
     }
 
-    /**
-     * @return string
-     */
-    public function ensureTempDirectory()
+    public function ensureTempDirectory(): string
     {
         $tmpDir = $this->getWorkingDirectory().'/.tmp';
         if (!is_dir($tmpDir)) {

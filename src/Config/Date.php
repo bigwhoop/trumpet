@@ -1,17 +1,8 @@
-<?php
-
-/**
- * This file is part of trumpet.
- *
- * (c) Philippe Gerber
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+<?php declare(strict_types=1);
 
 namespace Bigwhoop\Trumpet\Config;
 
-class Date
+final class Date
 {
     /** @var \DateTime */
     public $date;
@@ -19,28 +10,18 @@ class Date
     /** @var string */
     public $format = '';
 
-    /**
-     * @param \DateTime $date
-     * @param string    $format
-     */
-    public function __construct(\DateTime $date, $format = 'l, F j Y')
+    public function __construct(\DateTime $date, string $format = 'l, F j Y')
     {
         $this->date = $date;
         $this->format = $format;
     }
 
-    /**
-     * @return string
-     */
-    public function toString()
+    public function toString(): string
     {
         return $this->date->format($this->format);
     }
 
-    /**
-     * @return string
-     */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->toString();
     }

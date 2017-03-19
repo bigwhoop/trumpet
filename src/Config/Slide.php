@@ -1,33 +1,18 @@
-<?php
-
-/**
- * This file is part of trumpet.
- *
- * (c) Philippe Gerber
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+<?php declare(strict_types=1);
 
 namespace Bigwhoop\Trumpet\Config;
 
-class Slide
+final class Slide
 {
     /** @var string */
     public $content = '';
 
-    /**
-     * @param string $content
-     */
-    public function __construct($content = '')
+    public function __construct(string $content = '')
     {
         $this->content = $content;
     }
 
-    /**
-     * @param string $content
-     */
-    public function addLine($content)
+    public function addLine(string $content)
     {
         if (empty($this->content)) {
             $this->content = $content;
@@ -36,10 +21,7 @@ class Slide
         }
     }
 
-    /**
-     * @return bool
-     */
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         return $this->content === '';
     }

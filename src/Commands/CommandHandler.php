@@ -1,47 +1,23 @@
-<?php
-
-/**
- * This file is part of trumpet.
- *
- * (c) Philippe Gerber
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+<?php declare(strict_types=1);
 
 namespace Bigwhoop\Trumpet\Commands;
 
-class CommandHandler
+final class CommandHandler
 {
     /** @var Command[] */
     private $commands = [];
 
-    /**
-     * @param Command $command
-     */
     public function registerCommand(Command $command)
     {
         $this->commands[$command->getToken()] = $command;
     }
-
-    /**
-     * @param string $commandName
-     *
-     * @return bool
-     */
-    public function hasCommand($commandName)
+    
+    public function hasCommand(string $commandName): bool
     {
         return array_key_exists($commandName, $this->commands);
     }
-
-    /**
-     * @param string                  $commandName
-     * @param CommandParams           $params
-     * @param CommandExecutionContext $executionContext
-     *
-     * @return string
-     */
-    public function execute($commandName, CommandParams $params, CommandExecutionContext $executionContext)
+    
+    public function execute(string $commandName, CommandParams $params, CommandExecutionContext $executionContext): string
     {
         if (!array_key_exists($commandName, $this->commands)) {
             throw new UnknownCommandException("Command '$commandName' must be registered before it can be used.");

@@ -1,11 +1,11 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Bigwhoop\Trumpet\Tests\CodeParsing\PHP;
 
-use Bigwhoop\Trumpet\CodeParsing\PHP\PHPClass;
-use Bigwhoop\Trumpet\CodeParsing\PHP\PHPCodeParser;
-use Bigwhoop\Trumpet\CodeParsing\PHP\PHPFunction;
-use Bigwhoop\Trumpet\CodeParsing\PHP\PHPMethod;
+use Bigwhoop\Trumpet\CodeParsing\Php\PhpClass;
+use Bigwhoop\Trumpet\CodeParsing\Php\PhpCodeParser;
+use Bigwhoop\Trumpet\CodeParsing\Php\PhpFunction;
+use Bigwhoop\Trumpet\CodeParsing\Php\PhpMethod;
 use Bigwhoop\Trumpet\Tests\TestCase;
 
 class PHPCodeParserTest extends TestCase
@@ -13,17 +13,17 @@ class PHPCodeParserTest extends TestCase
     /**
      * @Inject
      *
-     * @var PHPCodeParser
+     * @var PhpCodeParser
      */
     private $parser;
 
     public function testClass()
     {
-        $result = $this->parser->parse('<?php class Foo { protected $var = 12.54; }');
+        $result = $this->parser->parse('<?php declare(strict_types=1); class Foo { protected $var = 12.54; }');
 
         $this->assertTrue($result->hasClass('Foo'));
         $class = $result->getClass('Foo');
-        $this->assertInstanceOf(PHPClass::class, $class);
+        $this->assertInstanceOf(PhpClass::class, $class);
 
         $expectedSource = <<<'CODE'
 class Foo
@@ -36,11 +36,11 @@ CODE;
 
     public function testClassWithNamespace()
     {
-        $result = $this->parser->parse('<?php namespace Foo\Bar; class Foo { protected $var = 12.54; }');
+        $result = $this->parser->parse('<?php declare(strict_types=1); namespace Foo\Bar; class Foo { protected $var = 12.54; }');
 
         $this->assertTrue($result->hasClass('Foo\Bar\Foo'));
         $class = $result->getClass('Foo\Bar\Foo');
-        $this->assertInstanceOf(PHPClass::class, $class);
+        $this->assertInstanceOf(PhpClass::class, $class);
 
         $expectedSource = <<<'CODE'
 class Foo
@@ -54,7 +54,7 @@ CODE;
     public function testClassMethods()
     {
         $code = <<<'CODE'
-<?php
+<?php declare(strict_types=1);
 namespace My\Library;
 
 class Number
@@ -80,7 +80,7 @@ CODE;
 
         $this->assertTrue($result->hasClass('My\Library\Number'));
         $class = $result->getClass('My\Library\Number');
-        $this->assertInstanceOf(PHPClass::class, $class);
+        $this->assertInstanceOf(PhpClass::class, $class);
 
         $this->assertCount(3, $class->getMethods());
 
@@ -111,13 +111,13 @@ CODE;
 
     public function testFunctions()
     {
-        $result = $this->parser->parse('<?php function add($a, $b) { return $a + $b; } function sub($a, $b) { return $a - $b; }');
+        $result = $this->parser->parse('<?php declare(strict_types=1); function add($a, $b) { return $a + $b; } function sub($a, $b) { return $a - $b; }');
 
         $this->assertCount(2, $result->getFunctions());
 
         $this->assertTrue($result->hasFunction('add'));
         $func = $result->getFunction('add');
-        $this->assertInstanceOf(PHPFunction::class, $func);
+        $this->assertInstanceOf(PhpFunction::class, $func);
 
         $expectedSource = <<<'CODE'
 function add($a, $b)
@@ -129,7 +129,7 @@ CODE;
 
         $this->assertTrue($result->hasFunction('sub'));
         $func = $result->getFunction('sub');
-        $this->assertInstanceOf(PHPFunction::class, $func);
+        $this->assertInstanceOf(PhpFunction::class, $func);
 
         $expectedSource = <<<'CODE'
 function sub($a, $b)
@@ -140,15 +140,10 @@ CODE;
         $this->assertSourceCode($expectedSource, $func->getSource());
     }
 
-    /**
-     * @param PHPClass $class
-     * @param string   $methodName
-     * @param string   $expectedSource
-     */
-    private function assertClassMethod(PHPClass $class, $methodName, $expectedSource)
+    private function assertClassMethod(PhpClass $class, string $methodName, string $expectedSource)
     {
         $this->assertTrue($class->hasMethod($methodName));
-        $this->assertInstanceOf(PHPMethod::class, $class->getMethod($methodName));
+        $this->assertInstanceOf(PhpMethod::class, $class->getMethod($methodName));
         $this->assertSourceCode($expectedSource, $class->getMethod($methodName)->getSource());
     }
 }

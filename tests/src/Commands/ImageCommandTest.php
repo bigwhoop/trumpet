@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Bigwhoop\Trumpet\Tests\Commands;
 
@@ -67,13 +67,8 @@ class ImageCommandTest extends TestCase
     {
         $this->assertImage('test.png 100x100 crop 50 50', 100, 100);
     }
-
-    /**
-     * @param string $paramValue
-     * @param int    $width
-     * @param int    $height
-     */
-    private function assertImage($paramValue, $width, $height)
+    
+    private function assertImage(string $paramValue, int $width, int $height)
     {
         $this->cmd->setReturnType(ImageCommand::RETURN_TYPE_DATA);
         $imageData = $this->cmd->execute(new CommandParams($paramValue), $this->ctx);

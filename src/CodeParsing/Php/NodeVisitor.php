@@ -1,26 +1,17 @@
-<?php
+<?php declare(strict_types=1);
 
-/**
- * This file is part of trumpet.
- *
- * (c) Philippe Gerber
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Bigwhoop\Trumpet\CodeParsing\PHP;
+namespace Bigwhoop\Trumpet\CodeParsing\Php;
 
 use PhpParser\Node;
 use PhpParser\NodeVisitorAbstract;
 use PhpParser\PrettyPrinterAbstract as Printer;
 
-class NodeVisitor extends NodeVisitorAbstract
+final class NodeVisitor extends NodeVisitorAbstract
 {
     /** @var ParserResult */
     private $result;
 
-    /** @var PHPClass|null */
+    /** @var PhpClass|null */
     private $currentClass;
 
     /** @var Printer */
@@ -32,18 +23,11 @@ class NodeVisitor extends NodeVisitorAbstract
      */
     public function __construct(Printer $printer, ParserResult $result = null)
     {
-        if (!$result) {
-            $result = new ParserResult();
-        }
-
         $this->printer = $printer;
-        $this->result = $result;
+        $this->result = $result ?: new ParserResult();
     }
 
-    /**
-     * @return ParserResult
-     */
-    public function getResult()
+    public function getResult(): ParserResult
     {
         return $this->result;
     }
@@ -55,12 +39,12 @@ class NodeVisitor extends NodeVisitorAbstract
     {
         if ($node instanceof Node\Stmt\Class_) {
             $fullyQualifiedName = $node->namespacedName->toString();
-            $this->currentClass = new PHPClass($fullyQualifiedName, [], $this->getSource($node));
+            $this->currentClass = new PhpClass($fullyQualifiedName, [], $this->getSource($node));
         } elseif ($node instanceof Node\Stmt\ClassMethod) {
-            $this->currentClass->addMethod(new PHPMethod($node->name, $node->isStatic(), $this->getSource($node)));
+            $this->currentClass->addMethod(new PhpMethod($node->name, $node->isStatic(), $this->getSource($node)));
         } elseif ($node instanceof Node\Stmt\Function_) {
             $fullyQualifiedName = $node->namespacedName->toString();
-            $this->result->addFunction(new PHPFunction($fullyQualifiedName, $this->getSource($node)));
+            $this->result->addFunction(new PhpFunction($fullyQualifiedName, $this->getSource($node)));
         }
     }
 
@@ -74,12 +58,7 @@ class NodeVisitor extends NodeVisitorAbstract
         }
     }
 
-    /**
-     * @param Node $node
-     *
-     * @return string
-     */
-    private function getSource(Node $node)
+    private function getSource(Node $node): string
     {
         return $this->printer->prettyPrint([$node]);
     }

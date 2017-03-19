@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Bigwhoop\Trumpet\Tests\Commands;
 
@@ -20,7 +20,7 @@ class CommandParamsTest extends TestCase
         $this->assertSame('foo', $params->getArgument(0));
         $this->assertSame('bar', $params->getArgument(1));
         $this->assertSame('baz', $params->getArgument(2));
-        $this->assertSame('fu',  $params->getArgument(3));
+        $this->assertSame('fu', $params->getArgument(3));
         $this->assertSame('bar', $params->getArgument(4));
         $this->assertSame('baz', $params->getArgument(5));
     }

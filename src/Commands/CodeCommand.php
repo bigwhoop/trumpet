@@ -1,17 +1,8 @@
-<?php
-
-/**
- * This file is part of trumpet.
- *
- * (c) Philippe Gerber
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+<?php declare(strict_types=1);
 
 namespace Bigwhoop\Trumpet\Commands;
 
-use Bigwhoop\Trumpet\CodeParsing\PHP\PHPCodeParser;
+use Bigwhoop\Trumpet\CodeParsing\Php\PhpCodeParser;
 
 /**
  * !code file.php
@@ -21,31 +12,22 @@ use Bigwhoop\Trumpet\CodeParsing\PHP\PHPCodeParser;
  * !code file.php class My\Class\Name
  * !code file.php method My\Class\Name myMethod.
  */
-class CodeCommand implements Command
+final class CodeCommand implements Command
 {
-    /** @var PHPCodeParser */
+    /** @var PhpCodeParser */
     private $parser;
 
-    /**
-     * @param PHPCodeParser $parser
-     */
-    public function __construct(PHPCodeParser $parser)
+    public function __construct(PhpCodeParser $parser)
     {
         $this->parser = $parser;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getToken()
+    
+    public function getToken(): string
     {
         return 'code';
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function execute(CommandParams $params, CommandExecutionContext $executionContext)
+    
+    public function execute(CommandParams $params, CommandExecutionContext $executionContext): string
     {
         $fileName = $params->getFirstArgument();
 
@@ -79,17 +61,8 @@ class CodeCommand implements Command
                 return $this->wrapLines($contents);
         }
     }
-
-    /**
-     * @param string        $contents
-     * @param CommandParams $params
-     * @param string        $fileName
-     *
-     * @return string
-     *
-     * @throws ExecutionFailedException
-     */
-    private function findClass($contents, CommandParams $params, $fileName)
+    
+    private function findClass(string $contents, CommandParams $params, string $fileName): string
     {
         $className = $params->getArgument(2);
         $result = $this->parser->parse($contents);
@@ -102,14 +75,7 @@ class CodeCommand implements Command
         return $this->wrapLines($result->getClass($className)->getSource());
     }
 
-    /**
-     * @param string $contents
-     *
-     * @return string
-     *
-     * @throws ExecutionFailedException
-     */
-    private function findAbstract($contents)
+    private function findAbstract(string $contents): string
     {
         $result = $this->parser->parse($contents);
 
@@ -139,17 +105,8 @@ class CodeCommand implements Command
 
         return $this->wrapLines($out);
     }
-
-    /**
-     * @param string        $contents
-     * @param CommandParams $params
-     * @param string        $fileName
-     *
-     * @return string
-     *
-     * @throws ExecutionFailedException
-     */
-    private function findMethod($contents, CommandParams $params, $fileName)
+    
+    private function findMethod(string $contents, CommandParams $params, string $fileName): string
     {
         $className = $params->getArgument(2);
         $methodName = $params->getArgument(3);
@@ -169,16 +126,7 @@ class CodeCommand implements Command
         return $this->wrapLines($class->getMethod($methodName)->getSource());
     }
 
-    /**
-     * @param string        $contents
-     * @param CommandParams $params
-     * @param string        $fileName
-     *
-     * @return string
-     *
-     * @throws ExecutionFailedException
-     */
-    private function findFunction($contents, CommandParams $params, $fileName)
+    private function findFunction(string $contents, CommandParams $params, string $fileName): string
     {
         $functionName = $params->getArgument(2);
         $result = $this->parser->parse($contents);
@@ -189,16 +137,8 @@ class CodeCommand implements Command
 
         return $this->wrapLines($result->getFunction($functionName)->getSource());
     }
-
-    /**
-     * @param string        $contents
-     * @param CommandParams $params
-     *
-     * @return string
-     *
-     * @throws ExecutionFailedException
-     */
-    private function findLines($contents, CommandParams $params)
+    
+    private function findLines(string $contents, CommandParams $params): string
     {
         $lines = explode("\n", $contents);
         $range = $params->getThirdArgument();
@@ -223,7 +163,7 @@ class CodeCommand implements Command
      *
      * @return string
      */
-    private function wrapLines($lines)
+    private function wrapLines($lines): string
     {
         if (!is_array($lines)) {
             $lines = explode("\n", $lines);

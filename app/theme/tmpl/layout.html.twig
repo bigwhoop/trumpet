@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="{{ language | default('en') }}">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }} by {{ presenters | join(', ') }}</title>
+    
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans:regular,semibold,italic,italicsemibold|Droid+Sans+Mono">
+    <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    
+    {% if theme_settings.bg %}
+        <style type="text/css">
+            .slides > article:first-of-type {
+                background-image: url('/{{ theme_settings.bg }}');
+            }
+        </style>
+    {% endif %}
+</head>
+<body>
+    <section class="slides">
+        <article>
+            <h1>{{ title }}</h1>
+            <h2>{{ subtitle }}</h2>
+            <div class="date">{{ date }}</div>
+            <div class="presenters">
+                {% for presenter in presenters %}
+                    <div class="presenter">
+                        <p class="name">{{ presenter.name }}</p>
+                        <p class="company">{{ presenter.company }}</p>
+                        <div class="contact-info">
+                            {% if presenter.twitter %}
+                                <p class="twitter">
+                                    <i class="fa fa-twitter fa-fw"></i>
+                                    <a href="https://twitter.com/{{ presenter.twitter }}">{{ presenter.twitter }}</a>
+                                </p>
+                            {% endif %}
+                            {% if presenter.email %}
+                                <p class="email">
+                                    <i class="fa fa-envelope fa-fw"></i>
+                                    <a href="mailto:{{ presenter.email }}?subject=Presentation%20{{ title }}">{{ presenter.email }}</a>
+                                </p>
+                            {% endif %}
+                            {% if presenter.skype %}
+                                <p class="website">
+                                    <i class="fa fa-skype fa-fw"></i>
+                                    <a href="skype:{{ presenter.skype }}">{{ presenter.skype }}</a>
+                                </p>
+                            {% endif %}
+                            {% if presenter.website %}
+                                <p class="website">
+                                    <i class="fa fa-globe fa-fw"></i>
+                                    <a href="{{ presenter.website }}">{{ presenter.website }}</a>
+                                </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </article>
+        
+        {% for slide in slides %}
+            <article>
+                {{ slide.content | raw }}
+            </article>
+        {% endfor %}
+    </section>
+    
+    <div id="help">
+        Use the left and right arrow keys or click the left and right
+        edges of the page to navigate between slides.<br>
+        (Press 'H' or navigate to hide this message.)
+    </div>
+    
+    <script src="/js/jquery-2.1.3.min.js"></script>
+    <script src="/js/slides.js"></script>
+</body>
+</html>

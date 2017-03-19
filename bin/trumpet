@@ -1,10 +1,10 @@
 #!/usr/bin/env php
-<?php
+<?php declare(strict_types=1);
+
 namespace Trumpet;
 
-use Bigwhoop\Trumpet\Exceptions\Exception;
-use Bigwhoop\Trumpet\HTTP\Server;
-use DI\Container as DIC;
+use Bigwhoop\Trumpet\Http\HttpServer;
+use Interop\Container\ContainerInterface as Container;
 
 $autoloadFilePaths = [
     __DIR__.'/../vendor/autoload.php',
@@ -26,14 +26,13 @@ if (!$autoloadFilePath) {
 
 require $autoloadFilePath;
 
-/** @var DIC $dic */
-$dic = require __DIR__ . '/../app/etc/di.php';
-
-/** @var Server $server */
-$server = $dic->get('Bigwhoop\Trumpet\HTTP\Server');
+/** @var Container $container */
+$container = require __DIR__ . '/../bootstrap.php';
 
 try {
+    /** @var HttpServer $server */
+    $server = $container->get(HttpServer::class);
     $server->listen();
-} catch (Exception $e) {
-    printf("[%s] %sL%d\n%s\n", get_class($e), $e->getFile(), $e->getLine(), $e->getMessage());
+} catch (\Throwable $t) {
+    printf("[%s] %sL%d\n%s\n", get_class($t), $t->getFile(), $t->getLine(), $t->getMessage());
 }

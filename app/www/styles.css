@@ -24,6 +24,10 @@ body {
     vertical-align: -1px;
 }
 .header a { color: white; text-decoration: none; }
+.header a.new-presentation {
+    font-size: 14px;
+    text-transform: uppercase;
+}
 .body {
     padding: 20px;
     background-color: white;

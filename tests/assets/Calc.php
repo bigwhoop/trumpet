@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace My\Test\Ns;
 
@@ -18,7 +18,7 @@ class Calc
      *
      * @return int
      */
-    public function add($a, $b)
+    public function add(int $a, int $b): int
     {
         return $a + $b;
     }
@@ -29,7 +29,7 @@ class Calc
      *
      * @return int
      */
-    public function multiply($a, $b)
+    public function multiply(int $a, int $b): int
     {
         return $a * $b;
     }
@@ -41,9 +41,9 @@ class Calc
  *
  * @return int
  */
-function addNumbers($a, $b)
+function addNumbers(int $a, int $b): int
 {
     return $a + $b;
 }
 
-echo "98 + 3 = ".addNumbers(98, 3);
+echo '98 + 3 = '.addNumbers(98, 3);

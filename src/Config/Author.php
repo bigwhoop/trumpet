@@ -1,17 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
-/**
- * This file is part of trumpet.
- *
- * (c) Philippe Gerber
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 
 namespace Bigwhoop\Trumpet\Config;
 
-class Author
+final class Author
 {
     /** @var string */
     public $name = '';
@@ -31,11 +23,13 @@ class Author
     /** @var string */
     public $skype = '';
 
-    /**
-     * @param string $name
-     */
-    public function __construct($name)
+    public function __construct(string $name)
     {
         $this->name = $name;
+    }
+    
+    public function __toString(): string
+    {
+        return $this->name;
     }
 }

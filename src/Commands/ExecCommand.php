@@ -1,30 +1,15 @@
-<?php
-
-/**
- * This file is part of trumpet.
- *
- * (c) Philippe Gerber
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+<?php declare(strict_types=1);
 
 namespace Bigwhoop\Trumpet\Commands;
 
-class ExecCommand implements Command
+final class ExecCommand implements Command
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getToken()
+    public function getToken(): string
     {
         return 'exec';
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function execute(CommandParams $params, CommandExecutionContext $executionContext)
+    public function execute(CommandParams $params, CommandExecutionContext $executionContext): string
     {
         $fileName = $params->getFirstArgument();
 
@@ -39,13 +24,8 @@ class ExecCommand implements Command
 
         return $this->wrapOutput($output);
     }
-
-    /**
-     * @param string $output
-     *
-     * @return string
-     */
-    private function wrapOutput($output)
+    
+    private function wrapOutput(string $output): string
     {
         $lines = explode("\n", $output);
 

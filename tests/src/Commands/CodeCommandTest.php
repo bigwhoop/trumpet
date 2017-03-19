@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Bigwhoop\Trumpet\Tests\Commands;
 
@@ -54,7 +54,7 @@ class Calc
      *
      * @return int
      */
-    public function add($a, $b)
+    public function add(int $a, int $b) : int
     {
         return $a + $b;
     }
@@ -64,7 +64,7 @@ class Calc
      *
      * @return int
      */
-    public function multiply($a, $b)
+    public function multiply(int $a, int $b) : int
     {
         return $a * $b;
     }
@@ -115,7 +115,7 @@ CODE;
  *
  * @return int
  */
-public function add($a, $b)
+public function add(int $a, int $b) : int
 {
     return $a + $b;
 }
@@ -161,7 +161,7 @@ CODE;
         $expected = <<<'CODE'
      * @return int
      */
-    public function multiply($a, $b)
+    public function multiply(int $a, int $b): int
 CODE;
         $expected = $this->indentText($expected);
 
@@ -184,7 +184,7 @@ CODE;
  *
  * @return int
  */
-function addNumbers($a, $b)
+function addNumbers(int $a, int $b) : int
 {
     return $a + $b;
 }
